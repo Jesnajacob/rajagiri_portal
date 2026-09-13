@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+{% block title %}{{ drive.job_role }} - {{ drive.company.name }}{% endblock %}
+{% block content %}
+<div class="container py-4">
+  <div class="rcss-card p-4">
+    <div class="d-flex align-items-center gap-3 mb-3">
+      {% if drive.company.logo %}<img src="{{ drive.company.logo.url }}" width="60" height="60" class="rounded">{% else %}<i class="bi bi-building display-5 text-primary"></i>{% endif %}
+      <div>
+        <h3 class="mb-0">{{ drive.job_role }}</h3>
+        <p class="text-muted mb-0">{{ drive.company.name }} &middot; {{ drive.company.location }}</p>
+      </div>
+    </div>
+    <div class="row mb-3">
+      <div class="col-md-3"><strong>Package</strong><p>{{ drive.package }}</p></div>
+      <div class="col-md-3"><strong>Minimum CGPA</strong><p>{{ drive.minimum_cgpa }}</p></div>
+      <div class="col-md-3"><strong>Deadline</strong><p>{{ drive.registration_deadline|date:"d M Y, g:i A" }}</p></div>
+      <div class="col-md-3"><strong>Interview Date</strong><p>{{ drive.interview_date|date:"d M Y, g:i A"|default:"TBA" }}</p></div>
+    </div>
+    <p><strong>Eligible Departments:</strong> {% for d in drive.eligible_departments.all %}{{ d.name }}{% if not forloop.last %}, {% endif %}{% endfor %}</p>
+    <p><strong>Required Skills:</strong> {{ drive.required_skills|default:"Not specified" }}</p>
+    <h5 class="mt-4">Job Description</h5>
+    <p>{{ drive.job_description|linebreaks }}</p>
+
+    {% if user.is_authenticated and user.role == "student" %}
+      {% if already_applied %}
+        <button class="btn btn-success rounded-pill-btn" disabled><i class="bi bi-check-circle"></i> Already Applied</button>
+      {% elif drive.is_open %}
+        <form method="post" action="{% url 'placement:apply' drive.pk %}">
+          {% csrf_token %}
+          <button type="submit" class="btn btn-primary rounded-pill-btn px-4" data-confirm="Apply for {{ drive.job_role }} at {{ drive.company.name }}?">Apply Now</button>
+        </form>
+      {% else %}
+        <span class="badge bg-secondary">Applications Closed</span>
+      {% endif %}
+    {% elif not user.is_authenticated %}
+      <a href="{% url 'accounts:login' %}" class="btn btn-primary rounded-pill-btn">Login to Apply</a>
+    {% endif %}
+  </div>
+</div>
+{% endblock %}

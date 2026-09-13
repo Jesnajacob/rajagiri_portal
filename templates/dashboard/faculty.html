@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+{% block title %}Faculty Dashboard - RCSS Connect{% endblock %}
+{% block content %}
+<div class="container py-4">
+  <div class="rcss-card p-4 mb-4 d-flex justify-content-between align-items-center flex-wrap">
+    <div>
+      <h4>Welcome, {{ profile.get_designation_display }} {{ user.get_full_name }}</h4>
+      <p class="text-muted mb-0">{{ profile.department.name }}</p>
+    </div>
+    <a href="{% url 'faculty:profile_edit' %}" class="btn btn-outline-primary rounded-pill-btn">Edit Profile</a>
+  </div>
+
+  <div class="row g-3 mb-4">
+    <div class="col-6 col-md-3"><div class="stat-card text-center"><h4 class="counter" data-count="{{ opportunities.count }}">0</h4><small>Research Posted</small></div></div>
+    <div class="col-6 col-md-3"><div class="stat-card text-center"><h4 class="counter" data-count="{{ total_applications }}">0</h4><small>Applications Received</small></div></div>
+    <div class="col-6 col-md-3"><div class="stat-card text-center"><h4 class="counter" data-count="{{ papers.count }}">0</h4><small>Papers Published</small></div></div>
+    <div class="col-6 col-md-3"><div class="stat-card text-center"><h4 class="counter" data-count="{{ mentored_projects.count }}">0</h4><small>RLabs Mentored</small></div></div>
+  </div>
+
+  <div class="row g-2 mb-4">
+    <div class="col-6 col-md-3"><a href="{% url 'research:create' %}" class="btn btn-outline-primary w-100 rounded-pill-btn"><i class="bi bi-plus-lg"></i> Post Research</a></div>
+    <div class="col-6 col-md-3"><a href="{% url 'research:my_opportunities' %}" class="btn btn-outline-primary w-100 rounded-pill-btn"><i class="bi bi-journal"></i> My Opportunities</a></div>
+    <div class="col-6 col-md-3"><a href="{% url 'research:paper_upload' %}" class="btn btn-outline-primary w-100 rounded-pill-btn"><i class="bi bi-upload"></i> Upload Paper</a></div>
+    <div class="col-6 col-md-3"><a href="{% url 'events:create' %}" class="btn btn-outline-primary w-100 rounded-pill-btn"><i class="bi bi-calendar-plus"></i> Create Event</a></div>
+  </div>
+
+  <div class="row g-4">
+    <div class="col-lg-6">
+      <div class="rcss-card p-3">
+        <h5>My Research Opportunities</h5>
+        {% for o in opportunities %}
+        <p class="small mb-1"><a href="{% url 'research:opportunity_applicants' o.pk %}">{{ o.topic }}</a> - {{ o.applications.count }} applicant(s)</p>
+        {% empty %}<p class="text-muted small">You haven't posted any research opportunities.</p>{% endfor %}
+      </div>
+    </div>
+    <div class="col-lg-6">
+      <div class="rcss-card p-3">
+        <h5>Recent Notifications</h5>
+        {% for n in notifications %}<p class="small mb-1">{{ n.title }}</p>{% empty %}<p class="text-muted small">No notifications yet.</p>{% endfor %}
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

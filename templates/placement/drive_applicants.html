@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+{% block title %}Applicants - {{ drive.job_role }}{% endblock %}
+{% block content %}
+<div class="container py-4">
+  <h3 class="section-title">Applicants: {{ drive.company.name }} - {{ drive.job_role }}</h3>
+  <div class="rcss-card p-3">
+    <table class="table align-middle mb-0">
+      <thead><tr><th>Student</th><th>Department</th><th>CGPA</th><th>Status</th><th>Update Status</th></tr></thead>
+      <tbody>
+      {% for app in applications %}
+        <tr>
+          <td>{{ app.student.user.get_full_name }} ({{ app.student.register_number }})</td>
+          <td>{{ app.student.department.name }}</td>
+          <td>{{ app.student.cgpa }}</td>
+          <td><span class="badge badge-status-{{ app.status }}">{{ app.get_status_display }}</span></td>
+          <td>
+            <form method="post" action="{% url 'placement:update_status' app.pk %}" class="d-flex gap-2">
+              {% csrf_token %}
+              <select name="status" class="form-select form-select-sm">
+                {% for value, label in app.STATUS_CHOICES %}
+                  <option value="{{ value }}" {% if app.status == value %}selected{% endif %}>{{ label }}</option>
+                {% endfor %}
+              </select>
+              <button class="btn btn-sm btn-primary">Update</button>
+            </form>
+          </td>
+        </tr>
+      {% empty %}<tr><td colspan="5" class="empty-state"><i class="bi bi-people"></i>No applicants yet.</td></tr>{% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock %}

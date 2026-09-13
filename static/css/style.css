@@ -1,0 +1,145 @@
+:root {
+  --rcss-primary: #1a3a8f;
+  --rcss-primary-dark: #10245c;
+  --rcss-primary-light: #eef2fb;
+  --rcss-accent: #2f6fed;
+  --rcss-bg: #f7f9fc;
+  --rcss-text: #1f2733;
+  --rcss-radius: 14px;
+}
+
+body {
+  background: var(--rcss-bg);
+  color: var(--rcss-text);
+  font-family: "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+}
+
+a { text-decoration: none; }
+
+/* ---------- Navbar ---------- */
+.navbar-rcss {
+  background: linear-gradient(90deg, var(--rcss-primary-dark), var(--rcss-primary));
+  box-shadow: 0 2px 10px rgba(16, 36, 92, 0.15);
+}
+.navbar-rcss .navbar-brand {
+  font-weight: 700;
+  color: #fff !important;
+  letter-spacing: 0.3px;
+}
+.navbar-rcss .nav-link {
+  color: rgba(255,255,255,0.88) !important;
+  font-weight: 500;
+}
+.navbar-rcss .nav-link:hover, .navbar-rcss .nav-link.active {
+  color: #fff !important;
+}
+.navbar-rcss .btn-outline-light { border-radius: 30px; }
+
+.notif-bell { position: relative; color: #fff !important; font-size: 1.2rem; }
+.notif-badge {
+  position: absolute; top: -4px; right: -8px;
+  background: #ff5252; color: #fff; font-size: 0.65rem;
+  border-radius: 50%; padding: 1px 6px; font-weight: 700;
+}
+
+/* ---------- Cards ---------- */
+.rcss-card {
+  background: #fff;
+  border: none;
+  border-radius: var(--rcss-radius);
+  box-shadow: 0 2px 14px rgba(16, 36, 92, 0.07);
+  transition: transform .18s ease, box-shadow .18s ease;
+}
+.rcss-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 10px 24px rgba(16, 36, 92, 0.14);
+}
+.stat-card {
+  border-radius: var(--rcss-radius);
+  padding: 1.4rem;
+  color: #fff;
+  background: linear-gradient(135deg, var(--rcss-accent), var(--rcss-primary));
+  box-shadow: 0 6px 18px rgba(47,111,237,0.25);
+}
+.stat-card h3 { font-weight: 700; margin-bottom: 0; }
+.stat-card small { opacity: .85; }
+
+.badge-status-applied { background:#6c757d;}
+.badge-status-shortlisted { background:#0d6efd;}
+.badge-status-interview { background:#fd7e14;}
+.badge-status-selected { background:#198754;}
+.badge-status-accepted { background:#198754;}
+.badge-status-rejected { background:#dc3545;}
+.badge-status-in_progress { background:#fd7e14;}
+.badge-status-open { background:#198754;}
+.badge-status-closed { background:#6c757d;}
+.badge-status-completed { background:#0d6efd;}
+
+/* ---------- Hero ---------- */
+.hero-section {
+  background: radial-gradient(circle at top right, #2f6fed 0, var(--rcss-primary-dark) 60%);
+  color: #fff;
+  padding: 5rem 0 6rem;
+  border-radius: 0 0 40px 40px;
+}
+.hero-section h1 { font-weight: 800; }
+.hero-section .btn-hero {
+  border-radius: 30px; padding: 0.7rem 1.8rem; font-weight: 600;
+}
+
+.section-title {
+  font-weight: 700;
+  color: var(--rcss-primary-dark);
+  margin-bottom: 1.6rem;
+  position: relative;
+  padding-bottom: .5rem;
+}
+.section-title::after {
+  content: "";
+  position: absolute; left: 0; bottom: 0;
+  width: 60px; height: 4px; border-radius: 4px;
+  background: var(--rcss-accent);
+}
+
+.rounded-pill-btn { border-radius: 30px; }
+
+.fade-in { animation: fadeInUp .6s ease both; }
+@keyframes fadeInUp {
+  from { opacity:0; transform: translateY(16px);}
+  to { opacity:1; transform: translateY(0);}
+}
+
+/* ---------- Sidebar (dashboards) ---------- */
+.dash-sidebar {
+  background: #fff;
+  border-radius: var(--rcss-radius);
+  box-shadow: 0 2px 14px rgba(16,36,92,0.07);
+  padding: 1.2rem;
+}
+.dash-sidebar .nav-link {
+  color: var(--rcss-text);
+  border-radius: 10px;
+  padding: .6rem .9rem;
+  font-weight: 500;
+}
+.dash-sidebar .nav-link:hover, .dash-sidebar .nav-link.active {
+  background: var(--rcss-primary-light);
+  color: var(--rcss-primary-dark);
+}
+
+.progress { border-radius: 30px; height: 10px; }
+
+footer.site-footer {
+  background: var(--rcss-primary-dark);
+  color: rgba(255,255,255,0.85);
+  padding: 2.5rem 0 1rem;
+  margin-top: 3rem;
+}
+footer.site-footer a { color: #fff; opacity: .85; }
+footer.site-footer a:hover { opacity: 1; text-decoration: underline; }
+
+.empty-state { text-align:center; padding: 3rem 1rem; color: #8a94a6; }
+.empty-state i { font-size: 2.6rem; margin-bottom: .8rem; display:block; }
+
+.notif-dropdown { width: 340px; max-height: 420px; overflow-y: auto; }
+.notif-item.unread { background: var(--rcss-primary-light); }

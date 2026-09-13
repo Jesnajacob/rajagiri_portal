@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+{% block title %}Admin Dashboard - RCSS Connect{% endblock %}
+{% block content %}
+<div class="container py-4">
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <h4>Administrator Dashboard</h4>
+    <a href="/admin/" class="btn btn-primary rounded-pill-btn"><i class="bi bi-gear"></i> Full Django Admin</a>
+  </div>
+
+  <div class="row g-3 mb-4">
+    <div class="col-6 col-md-3"><div class="stat-card text-center"><h4 class="counter" data-count="{{ total_students }}">0</h4><small>Students</small></div></div>
+    <div class="col-6 col-md-3"><div class="stat-card text-center"><h4 class="counter" data-count="{{ total_faculty }}">0</h4><small>Faculty</small></div></div>
+    <div class="col-6 col-md-3"><div class="stat-card text-center"><h4 class="counter" data-count="{{ total_alumni }}">0</h4><small>Alumni</small></div></div>
+    <div class="col-6 col-md-3"><div class="stat-card text-center"><h4 class="counter" data-count="{{ total_users }}">0</h4><small>Total Users</small></div></div>
+    <div class="col-6 col-md-3"><div class="stat-card text-center"><h4 class="counter" data-count="{{ active_drives }}">0</h4><small>Active Drives</small></div></div>
+    <div class="col-6 col-md-3"><div class="stat-card text-center"><h4 class="counter" data-count="{{ total_internships }}">0</h4><small>Internships</small></div></div>
+    <div class="col-6 col-md-3"><div class="stat-card text-center"><h4 class="counter" data-count="{{ total_rlabs }}">0</h4><small>RLabs Projects</small></div></div>
+    <div class="col-6 col-md-3"><div class="stat-card text-center"><h4 class="counter" data-count="{{ total_research }}">0</h4><small>Research Opportunities</small></div></div>
+  </div>
+
+  <div class="row g-3 mb-4">
+    <div class="col-md-3"><a href="/admin/accounts/user/" class="btn btn-outline-primary w-100 rounded-pill-btn">Manage Users</a></div>
+    <div class="col-md-3"><a href="/admin/placement/company/" class="btn btn-outline-primary w-100 rounded-pill-btn">Manage Companies</a></div>
+    <div class="col-md-3"><a href="/admin/placement/placementdrive/" class="btn btn-outline-primary w-100 rounded-pill-btn">Manage Drives</a></div>
+    <div class="col-md-3"><a href="/admin/events/event/" class="btn btn-outline-primary w-100 rounded-pill-btn">Manage Events</a></div>
+    <div class="col-md-3"><a href="/admin/core/announcement/" class="btn btn-outline-primary w-100 rounded-pill-btn">Announcements</a></div>
+    <div class="col-md-3"><a href="/admin/rlabs/rlabsproject/" class="btn btn-outline-primary w-100 rounded-pill-btn">RLabs Projects</a></div>
+    <div class="col-md-3"><a href="/admin/research/researchopportunity/" class="btn btn-outline-primary w-100 rounded-pill-btn">Research Opportunities</a></div>
+    <div class="col-md-3"><a href="{% url 'placement:statistics' %}" class="btn btn-outline-primary w-100 rounded-pill-btn">Placement Statistics</a></div>
+  </div>
+
+  <div class="rcss-card p-3">
+    <h5>Users by Role</h5>
+    <canvas id="roleChart" height="90"></canvas>
+  </div>
+</div>
+{% endblock %}
+{% block extra_js %}
+<script>
+const roleData = {{ roles_breakdown|safe }};
+const labels = roleData.map(r => r.role);
+const counts = roleData.map(r => r.count);
+new Chart(document.getElementById("roleChart"), {
+  type: "bar",
+  data: { labels: labels, datasets: [{ label: "Users", data: counts, backgroundColor: "#2f6fed" }] },
+  options: { indexAxis: "y" }
+});
+</script>
+{% endblock %}

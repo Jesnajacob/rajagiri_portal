@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+{% block title %}Notice Board - RCSS Connect{% endblock %}
+{% block content %}
+<div class="container py-4">
+  <h3 class="section-title">Digital Notice Board</h3>
+  <div class="mb-3">
+    <div class="btn-group flex-wrap">
+      <a href="?" class="btn btn-sm btn-outline-secondary {% if not category %}active{% endif %}">All</a>
+      <a href="?category=academic" class="btn btn-sm btn-outline-secondary {% if category == 'academic' %}active{% endif %}">Academic</a>
+      <a href="?category=placement" class="btn btn-sm btn-outline-secondary {% if category == 'placement' %}active{% endif %}">Placement</a>
+      <a href="?category=internship" class="btn btn-sm btn-outline-secondary {% if category == 'internship' %}active{% endif %}">Internship</a>
+      <a href="?category=rlabs" class="btn btn-sm btn-outline-secondary {% if category == 'rlabs' %}active{% endif %}">RLabs</a>
+      <a href="?category=research" class="btn btn-sm btn-outline-secondary {% if category == 'research' %}active{% endif %}">Research</a>
+      <a href="?category=events" class="btn btn-sm btn-outline-secondary {% if category == 'events' %}active{% endif %}">Events</a>
+      <a href="?category=general" class="btn btn-sm btn-outline-secondary {% if category == 'general' %}active{% endif %}">General</a>
+    </div>
+  </div>
+  {% for n in notices %}
+  <div class="rcss-card p-3 mb-3">
+    <div class="d-flex justify-content-between">
+      <strong>{{ n.title }}</strong>
+      <span class="badge bg-primary-subtle text-primary">{{ n.get_category_display }}</span>
+    </div>
+    <p class="mb-1">{{ n.message }}</p>
+    <span class="small text-muted">Posted by {{ n.posted_by.get_full_name }} &middot; {{ n.created_at|date:"d M Y" }}</span>
+  </div>
+  {% empty %}
+  <div class="empty-state"><i class="bi bi-pin-angle"></i>No notices posted yet.</div>
+  {% endfor %}
+</div>
+{% endblock %}

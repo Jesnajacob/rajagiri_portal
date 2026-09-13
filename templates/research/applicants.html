@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+{% block title %}Applicants - {{ opportunity.topic }}{% endblock %}
+{% block content %}
+<div class="container py-4">
+  <h3 class="section-title">Applicants: {{ opportunity.topic }}</h3>
+  <div class="rcss-card p-3">
+    <table class="table align-middle mb-0">
+      <thead><tr><th>Student</th><th>Statement of Interest</th><th>Status</th><th>Decision</th></tr></thead>
+      <tbody>
+      {% for app in applications %}
+        <tr>
+          <td>{{ app.student.user.get_full_name }}</td>
+          <td class="small">{{ app.statement_of_interest|truncatechars:80 }}</td>
+          <td><span class="badge badge-status-{{ app.status }}">{{ app.get_status_display }}</span></td>
+          <td>
+            {% if app.status == "applied" %}
+            <form method="post" action="{% url 'research:review_application' app.pk %}" class="d-flex gap-1">
+              {% csrf_token %}
+              <button name="decision" value="accepted" class="btn btn-sm btn-success">Accept</button>
+              <button name="decision" value="rejected" class="btn btn-sm btn-outline-danger">Reject</button>
+            </form>
+            {% endif %}
+          </td>
+        </tr>
+      {% empty %}<tr><td colspan="4" class="empty-state"><i class="bi bi-people"></i>No applicants yet.</td></tr>{% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock %}

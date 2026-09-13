@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+{% block title %}RLabs Projects - RCSS Connect{% endblock %}
+{% block content %}
+<div class="container py-4">
+  <div class="d-flex justify-content-between mb-3">
+    <h3 class="section-title mb-0">RLabs Projects</h3>
+    {% if user.is_authenticated and user.role == "rlabs_coordinator" %}
+      <a href="{% url 'rlabs:manage_list' %}" class="btn btn-primary rounded-pill-btn"><i class="bi bi-gear"></i> Manage Projects</a>
+    {% endif %}
+  </div>
+  <form class="row g-2 mb-4">
+    <div class="col-md-4"><input type="text" name="skill" class="form-control" placeholder="Filter by skill (e.g. Python)" value="{{ request.GET.skill }}"></div>
+    <div class="col-md-2"><button class="btn btn-outline-primary w-100 rounded-pill-btn">Filter</button></div>
+  </form>
+  <div class="row g-4">
+    {% for p in projects %}
+    <div class="col-md-6 col-lg-4">
+      <div class="rcss-card p-3 h-100">
+        <div class="d-flex justify-content-between">
+          <i class="bi bi-cpu fs-3 text-primary mb-2 d-block"></i>
+          <span class="badge badge-status-{{ p.status }}">{{ p.get_status_display }}</span>
+        </div>
+        <strong>{{ p.title }}</strong>
+        <p class="small text-muted mb-1">Mentor: {{ p.faculty_mentor.user.get_full_name|default:"TBA" }}</p>
+        <p class="small text-muted mb-2">Skills: {{ p.required_skills }}</p>
+        <a href="{% url 'rlabs:detail' p.pk %}" class="btn btn-sm btn-primary rounded-pill-btn">
+          {% if p.pk in applied_ids %}Applied &check;{% else %}View & Apply{% endif %}
+        </a>
+      </div>
+    </div>
+    {% empty %}<div class="empty-state col-12"><i class="bi bi-cpu"></i>No RLabs projects found.</div>{% endfor %}
+  </div>
+</div>
+{% endblock %}

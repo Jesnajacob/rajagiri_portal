@@ -1,0 +1,24 @@
+{% load form_tags %}
+{% for field in form %}
+  {% with widget_name=field|widget_type %}
+  <div class="mb-3">
+    {% if widget_name == "CheckboxInput" %}
+      <div class="form-check">
+        {{ field|add_class:"form-check-input" }}
+        <label class="form-check-label" for="{{ field.id_for_label }}">{{ field.label }}</label>
+      </div>
+    {% else %}
+      <label class="form-label" for="{{ field.id_for_label }}">{{ field.label }}</label>
+      {% if widget_name == "Select" or widget_name == "SelectMultiple" %}
+        {{ field|add_class:"form-select" }}
+      {% elif widget_name == "CheckboxSelectMultiple" %}
+        {{ field }}
+      {% else %}
+        {{ field|add_class:"form-control" }}
+      {% endif %}
+    {% endif %}
+    {% if field.help_text %}<div class="form-text">{{ field.help_text }}</div>{% endif %}
+    {% for error in field.errors %}<div class="text-danger small">{{ error }}</div>{% endfor %}
+  </div>
+  {% endwith %}
+{% endfor %}

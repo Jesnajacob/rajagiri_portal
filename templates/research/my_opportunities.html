@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% block title %}My Research Opportunities{% endblock %}
+{% block content %}
+<div class="container py-4">
+  <div class="d-flex justify-content-between mb-3">
+    <h3 class="section-title mb-0">My Research Opportunities</h3>
+    <a href="{% url 'research:create' %}" class="btn btn-primary rounded-pill-btn"><i class="bi bi-plus-lg"></i> Post New</a>
+  </div>
+  <div class="rcss-card p-3">
+    <table class="table align-middle mb-0">
+      <thead><tr><th>Topic</th><th>Area</th><th>Deadline</th><th>Applicants</th><th></th></tr></thead>
+      <tbody>
+      {% for o in opportunities %}
+        <tr>
+          <td>{{ o.topic }}</td><td>{{ o.research_area }}</td><td>{{ o.application_deadline }}</td>
+          <td><a href="{% url 'research:opportunity_applicants' o.pk %}">{{ o.applications.count }}</a></td>
+          <td><a href="{% url 'research:edit' o.pk %}" class="btn btn-sm btn-outline-primary">Edit</a></td>
+        </tr>
+      {% empty %}<tr><td colspan="5" class="empty-state"><i class="bi bi-journal"></i>You haven't posted any opportunities yet.</td></tr>{% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock %}

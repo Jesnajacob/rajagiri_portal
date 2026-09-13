@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+{% block title %}Manage Companies - RCSS Connect{% endblock %}
+{% block content %}
+<div class="container py-4">
+  <div class="d-flex justify-content-between mb-3">
+    <h3 class="section-title mb-0">Companies</h3>
+    <a href="{% url 'placement:company_create' %}" class="btn btn-primary rounded-pill-btn"><i class="bi bi-plus-lg"></i> Add Company</a>
+  </div>
+  <div class="rcss-card p-3">
+    <table class="table align-middle mb-0">
+      <thead><tr><th>Name</th><th>Industry</th><th>Location</th><th>Drives</th><th></th></tr></thead>
+      <tbody>
+      {% for c in companies %}
+        <tr>
+          <td>{{ c.name }}</td><td>{{ c.industry }}</td><td>{{ c.location }}</td>
+          <td>{{ c.placement_drives.count }}</td>
+          <td class="text-end">
+            <a href="{% url 'placement:company_edit' c.pk %}" class="btn btn-sm btn-outline-primary">Edit</a>
+            <form method="post" action="{% url 'placement:company_delete' c.pk %}" class="d-inline">
+              {% csrf_token %}
+              <button class="btn btn-sm btn-outline-danger" data-confirm="Delete {{ c.name }}?">Delete</button>
+            </form>
+          </td>
+        </tr>
+      {% empty %}<tr><td colspan="5" class="empty-state"><i class="bi bi-building"></i>No companies added yet.</td></tr>{% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock %}

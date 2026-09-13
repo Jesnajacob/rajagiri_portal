@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+{% block title %}Research Opportunities - RCSS Connect{% endblock %}
+{% block content %}
+<div class="container py-4">
+  <div class="d-flex justify-content-between mb-3">
+    <h3 class="section-title mb-0">Research Opportunities</h3>
+    {% if user.is_authenticated and user.role == "faculty" %}
+      <a href="{% url 'research:create' %}" class="btn btn-primary rounded-pill-btn"><i class="bi bi-plus-lg"></i> Post Opportunity</a>
+    {% endif %}
+  </div>
+  <form class="row g-2 mb-4">
+    <div class="col-md-4"><input type="text" name="area" class="form-control" placeholder="Search by research area" value="{{ request.GET.area }}"></div>
+    <div class="col-md-2"><button class="btn btn-outline-primary w-100 rounded-pill-btn">Search</button></div>
+  </form>
+  <div class="row g-4">
+    {% for o in opportunities %}
+    <div class="col-md-6 col-lg-4">
+      <div class="rcss-card p-3 h-100">
+        <i class="bi bi-journal-richtext fs-3 text-primary mb-2 d-block"></i>
+        <strong>{{ o.topic }}</strong>
+        <p class="small text-muted mb-1">{{ o.research_area }} &middot; {{ o.faculty.user.get_full_name }}</p>
+        <p class="small text-muted mb-2">Deadline: {{ o.application_deadline }}</p>
+        <a href="{% url 'research:detail' o.pk %}" class="btn btn-sm btn-primary rounded-pill-btn">
+          {% if o.pk in applied_ids %}Applied &check;{% else %}View & Apply{% endif %}
+        </a>
+      </div>
+    </div>
+    {% empty %}<div class="empty-state col-12"><i class="bi bi-journal-richtext"></i>No research opportunities found.</div>{% endfor %}
+  </div>
+</div>
+{% endblock %}

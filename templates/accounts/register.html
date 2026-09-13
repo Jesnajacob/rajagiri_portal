@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+{% block title %}Register - RCSS Connect{% endblock %}
+{% block content %}
+<div class="container py-5">
+  <div class="row justify-content-center">
+    <div class="col-md-7">
+      <div class="rcss-card p-4">
+        <h3 class="text-center mb-1"><i class="bi bi-mortarboard-fill text-primary"></i> Join RCSS Connect</h3>
+        <p class="text-center text-muted mb-4">Create your account</p>
+        <form method="post" class="needs-validation" novalidate>
+          {% csrf_token %}
+          {% include "partials/form_fields.html" %}
+          <button type="submit" class="btn btn-primary w-100 rounded-pill-btn mt-2">Create Account</button>
+        </form>
+        <p class="text-center small mt-3 mb-0">Already have an account? <a href="{% url 'accounts:login' %}">Login here</a></p>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

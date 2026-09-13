@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+{% block title %}Internships - RCSS Connect{% endblock %}
+{% block content %}
+<div class="container py-4">
+  <div class="d-flex justify-content-between mb-3">
+    <h3 class="section-title mb-0">Internship Opportunities</h3>
+    {% if user.is_authenticated and user.role in "placement_officer faculty alumni" %}
+      <a href="{% url 'internship:create' %}" class="btn btn-primary rounded-pill-btn"><i class="bi bi-plus-lg"></i> Post Internship</a>
+    {% endif %}
+  </div>
+  <form class="row g-2 mb-4">
+    <div class="col-md-4"><input type="text" name="q" class="form-control" placeholder="Search internships" value="{{ request.GET.q }}"></div>
+    <div class="col-md-2"><button class="btn btn-outline-primary w-100 rounded-pill-btn">Search</button></div>
+  </form>
+  <div class="row g-4">
+    {% for i in internships %}
+    <div class="col-md-6 col-lg-4">
+      <div class="rcss-card p-3 h-100">
+        <i class="bi bi-laptop fs-3 text-primary mb-2 d-block"></i>
+        <strong>{{ i.title }}</strong>
+        <p class="small text-muted mb-1">{{ i.company.name }} &middot; {{ i.location }}</p>
+        <p class="small text-muted mb-2">{{ i.duration }} {% if i.stipend %}&middot; {{ i.stipend }}{% endif %}</p>
+        <a href="{% url 'internship:detail' i.pk %}" class="btn btn-sm btn-primary rounded-pill-btn">
+          {% if i.pk in applied_ids %}Applied &check;{% else %}View & Apply{% endif %}
+        </a>
+      </div>
+    </div>
+    {% empty %}<div class="empty-state col-12"><i class="bi bi-laptop"></i>No internships found.</div>{% endfor %}
+  </div>
+</div>
+{% endblock %}

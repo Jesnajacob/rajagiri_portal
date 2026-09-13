@@ -1,0 +1,186 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}RCSS Connect - Home{% endblock %}
+
+{% block content %}
+<section class="hero-section text-center">
+  <div class="container fade-in">
+    <span class="badge bg-light text-primary rounded-pill px-3 py-2 mb-3">Rajagiri College of Social Sciences</span>
+    <h1 class="display-5 mb-3">Integrated Career, Research &amp; Student<br>Collaboration Portal</h1>
+    <p class="lead col-lg-8 mx-auto mb-4">
+      RCSS Connect brings Students, Faculty, Placement Cell, Alumni, RLabs and Administrators
+      onto one platform — so opportunities in placements, internships, research and RLabs
+      never get missed again.
+    </p>
+    {% if not user.is_authenticated %}
+    <a href="{% url 'accounts:register' %}" class="btn btn-light btn-hero btn-lg me-2">Get Started</a>
+    <a href="{% url 'accounts:login' %}" class="btn btn-outline-light btn-hero btn-lg">Login</a>
+    {% else %}
+    <a href="{% url 'dashboard:redirect' %}" class="btn btn-light btn-hero btn-lg">Go to Dashboard</a>
+    {% endif %}
+  </div>
+</section>
+
+<div class="container">
+  <!-- Stats -->
+  <div class="row g-3 mt-n5">
+    <div class="col-6 col-md-3">
+      <div class="stat-card text-center"><h3 class="counter" data-count="{{ total_students }}">0</h3><small>Students</small></div>
+    </div>
+    <div class="col-6 col-md-3">
+      <div class="stat-card text-center"><h3 class="counter" data-count="{{ total_companies }}">0</h3><small>Partner Companies</small></div>
+    </div>
+    <div class="col-6 col-md-3">
+      <div class="stat-card text-center"><h3 class="counter" data-count="{{ total_placed }}">0</h3><small>Students Placed</small></div>
+    </div>
+    <div class="col-6 col-md-3">
+      <div class="stat-card text-center"><h3 class="counter" data-count="{{ total_drives }}">0</h3><small>Placement Drives</small></div>
+    </div>
+  </div>
+
+  <!-- Placement Drives -->
+  <div class="mt-5">
+    <div class="d-flex justify-content-between align-items-center">
+      <h3 class="section-title">Latest Placement Drives</h3>
+      <a href="{% url 'placement:list' %}" class="small">View all &rarr;</a>
+    </div>
+    <div class="row g-4">
+      {% for drive in placement_drives %}
+      <div class="col-md-6 col-lg-3">
+        <div class="rcss-card p-3 h-100">
+          <div class="d-flex align-items-center gap-2 mb-2">
+            {% if drive.company.logo %}<img src="{{ drive.company.logo.url }}" width="36" height="36" class="rounded" alt="">{% else %}<i class="bi bi-building fs-4 text-primary"></i>{% endif %}
+            <strong>{{ drive.company.name }}</strong>
+          </div>
+          <p class="mb-1 fw-semibold">{{ drive.job_role }}</p>
+          <p class="text-muted small mb-2">Package: {{ drive.package }}</p>
+          <a href="{% url 'placement:detail' drive.pk %}" class="btn btn-sm btn-outline-primary rounded-pill-btn">View Details</a>
+        </div>
+      </div>
+      {% empty %}
+      <div class="empty-state col-12"><i class="bi bi-briefcase"></i>No active placement drives right now. Check back soon!</div>
+      {% endfor %}
+    </div>
+  </div>
+
+  <!-- Internships -->
+  <div class="mt-5">
+    <div class="d-flex justify-content-between align-items-center">
+      <h3 class="section-title">Latest Internship Opportunities</h3>
+      <a href="{% url 'internship:list' %}" class="small">View all &rarr;</a>
+    </div>
+    <div class="row g-4">
+      {% for i in internships %}
+      <div class="col-md-6 col-lg-3">
+        <div class="rcss-card p-3 h-100">
+          <i class="bi bi-laptop fs-4 text-primary mb-2 d-block"></i>
+          <p class="fw-semibold mb-1">{{ i.title }}</p>
+          <p class="text-muted small mb-2">{{ i.company.name }} &middot; {{ i.duration }}</p>
+          <a href="{% url 'internship:detail' i.pk %}" class="btn btn-sm btn-outline-primary rounded-pill-btn">View Details</a>
+        </div>
+      </div>
+      {% empty %}
+      <div class="empty-state col-12"><i class="bi bi-laptop"></i>No internships posted yet.</div>
+      {% endfor %}
+    </div>
+  </div>
+
+  <!-- RLabs -->
+  <div class="mt-5">
+    <div class="d-flex justify-content-between align-items-center">
+      <h3 class="section-title">Latest RLabs Projects</h3>
+      <a href="{% url 'rlabs:list' %}" class="small">View all &rarr;</a>
+    </div>
+    <div class="row g-4">
+      {% for p in rlabs_projects %}
+      <div class="col-md-6 col-lg-3">
+        <div class="rcss-card p-3 h-100">
+          <i class="bi bi-cpu fs-4 text-primary mb-2 d-block"></i>
+          <p class="fw-semibold mb-1">{{ p.title }}</p>
+          <p class="text-muted small mb-2">Skills: {{ p.required_skills|truncatechars:40 }}</p>
+          <a href="{% url 'rlabs:detail' p.pk %}" class="btn btn-sm btn-outline-primary rounded-pill-btn">View Details</a>
+        </div>
+      </div>
+      {% empty %}
+      <div class="empty-state col-12"><i class="bi bi-cpu"></i>No RLabs projects published yet.</div>
+      {% endfor %}
+    </div>
+  </div>
+
+  <!-- Research -->
+  <div class="mt-5">
+    <div class="d-flex justify-content-between align-items-center">
+      <h3 class="section-title">Research Opportunities</h3>
+      <a href="{% url 'research:list' %}" class="small">View all &rarr;</a>
+    </div>
+    <div class="row g-4">
+      {% for r in research_opportunities %}
+      <div class="col-md-6 col-lg-3">
+        <div class="rcss-card p-3 h-100">
+          <i class="bi bi-journal-richtext fs-4 text-primary mb-2 d-block"></i>
+          <p class="fw-semibold mb-1">{{ r.topic }}</p>
+          <p class="text-muted small mb-2">{{ r.research_area }} &middot; {{ r.faculty.user.get_full_name }}</p>
+          <a href="{% url 'research:detail' r.pk %}" class="btn btn-sm btn-outline-primary rounded-pill-btn">View Details</a>
+        </div>
+      </div>
+      {% empty %}
+      <div class="empty-state col-12"><i class="bi bi-journal-richtext"></i>No research opportunities open right now.</div>
+      {% endfor %}
+    </div>
+  </div>
+
+  <!-- Events -->
+  <div class="mt-5">
+    <div class="d-flex justify-content-between align-items-center">
+      <h3 class="section-title">Upcoming Events</h3>
+      <a href="{% url 'events:list' %}" class="small">View all &rarr;</a>
+    </div>
+    <div class="row g-4">
+      {% for e in events %}
+      <div class="col-md-6 col-lg-3">
+        <div class="rcss-card p-3 h-100">
+          <i class="bi bi-calendar-event fs-4 text-primary mb-2 d-block"></i>
+          <p class="fw-semibold mb-1">{{ e.title }}</p>
+          <p class="text-muted small mb-2">{{ e.date|date:"d M Y, g:i A" }} &middot; {{ e.venue }}</p>
+          <a href="{% url 'events:detail' e.pk %}" class="btn btn-sm btn-outline-primary rounded-pill-btn">View Details</a>
+        </div>
+      </div>
+      {% empty %}
+      <div class="empty-state col-12"><i class="bi bi-calendar-event"></i>No upcoming events scheduled.</div>
+      {% endfor %}
+    </div>
+  </div>
+
+  <!-- Alumni + Achievements -->
+  <div class="row mt-5 g-4">
+    <div class="col-lg-6">
+      <h3 class="section-title">Alumni Highlights</h3>
+      {% for a in alumni_highlights %}
+      <div class="rcss-card p-3 mb-3 d-flex align-items-center gap-3">
+        <i class="bi bi-person-badge fs-2 text-primary"></i>
+        <div>
+          <strong>{{ a.user.get_full_name }}</strong> &middot; {{ a.graduation_year }}<br>
+          <span class="text-muted small">{{ a.designation }} at {{ a.current_company }}</span>
+        </div>
+      </div>
+      {% empty %}
+      <div class="empty-state"><i class="bi bi-person-badge"></i>Alumni profiles will appear here.</div>
+      {% endfor %}
+    </div>
+    <div class="col-lg-6">
+      <h3 class="section-title">Student Achievements</h3>
+      {% for ach in achievements %}
+      <div class="rcss-card p-3 mb-3 d-flex align-items-center gap-3">
+        <i class="bi bi-trophy fs-2 text-warning"></i>
+        <div>
+          <strong>{{ ach.title }}</strong><br>
+          <span class="text-muted small">{{ ach.user.get_full_name }} &middot; {{ ach.get_achievement_type_display }}</span>
+        </div>
+      </div>
+      {% empty %}
+      <div class="empty-state"><i class="bi bi-trophy"></i>Featured achievements will appear here.</div>
+      {% endfor %}
+    </div>
+  </div>
+</div>
+{% endblock %}

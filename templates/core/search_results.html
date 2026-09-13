@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+{% block title %}Search Results - RCSS Connect{% endblock %}
+{% block content %}
+<div class="container py-4">
+  <h3 class="section-title">Search Results for "{{ query }}"</h3>
+  {% if not query %}
+    <div class="empty-state"><i class="bi bi-search"></i>Type something in the search bar above.</div>
+  {% else %}
+  <div class="row g-4">
+    <div class="col-md-6">
+      <div class="rcss-card p-3">
+        <h6>Companies</h6>
+        {% for c in results.companies %}<p><i class="bi bi-building"></i> {{ c.name }}</p>{% empty %}<p class="text-muted small">No matches.</p>{% endfor %}
+      </div>
+    </div>
+    <div class="col-md-6">
+      <div class="rcss-card p-3">
+        <h6>Placement Drives</h6>
+        {% for d in results.drives %}<p><a href="{% url 'placement:detail' d.pk %}">{{ d.company.name }} - {{ d.job_role }}</a></p>{% empty %}<p class="text-muted small">No matches.</p>{% endfor %}
+      </div>
+    </div>
+    <div class="col-md-6">
+      <div class="rcss-card p-3">
+        <h6>Internships</h6>
+        {% for i in results.internships %}<p><a href="{% url 'internship:detail' i.pk %}">{{ i.title }}</a></p>{% empty %}<p class="text-muted small">No matches.</p>{% endfor %}
+      </div>
+    </div>
+    <div class="col-md-6">
+      <div class="rcss-card p-3">
+        <h6>RLabs Projects</h6>
+        {% for r in results.rlabs %}<p><a href="{% url 'rlabs:detail' r.pk %}">{{ r.title }}</a></p>{% empty %}<p class="text-muted small">No matches.</p>{% endfor %}
+      </div>
+    </div>
+    <div class="col-md-6">
+      <div class="rcss-card p-3">
+        <h6>Research Opportunities</h6>
+        {% for r in results.research %}<p><a href="{% url 'research:detail' r.pk %}">{{ r.topic }}</a></p>{% empty %}<p class="text-muted small">No matches.</p>{% endfor %}
+      </div>
+    </div>
+    <div class="col-md-6">
+      <div class="rcss-card p-3">
+        <h6>Alumni</h6>
+        {% for a in results.alumni %}<p><a href="{% url 'alumni:detail' a.pk %}">{{ a.user.get_full_name }}</a></p>{% empty %}<p class="text-muted small">No matches.</p>{% endfor %}
+      </div>
+    </div>
+    <div class="col-md-6">
+      <div class="rcss-card p-3">
+        <h6>Events</h6>
+        {% for e in results.events %}<p><a href="{% url 'events:detail' e.pk %}">{{ e.title }}</a></p>{% empty %}<p class="text-muted small">No matches.</p>{% endfor %}
+      </div>
+    </div>
+  </div>
+  {% endif %}
+</div>
+{% endblock %}

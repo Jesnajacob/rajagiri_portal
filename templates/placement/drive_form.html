@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% block title %}{{ title }} - RCSS Connect{% endblock %}
+{% block content %}
+<div class="container py-4">
+  <div class="row justify-content-center">
+    <div class="col-lg-8">
+      <div class="rcss-card p-4">
+        <h4 class="mb-3">{{ title }}</h4>
+        <form method="post" class="needs-validation" novalidate>
+          {% csrf_token %}
+          {% include "partials/form_fields.html" %}
+          <button type="submit" class="btn btn-primary rounded-pill-btn px-4">Save Drive</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

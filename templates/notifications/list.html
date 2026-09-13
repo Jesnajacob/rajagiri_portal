@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+{% block title %}Notifications - RCSS Connect{% endblock %}
+{% block content %}
+<div class="container py-4">
+  <div class="d-flex justify-content-between mb-3">
+    <h3 class="section-title mb-0">Notifications</h3>
+    <button id="mark-all-read-btn" data-url="{% url 'notifications:mark_all_read' %}" class="btn btn-outline-primary btn-sm rounded-pill-btn">Mark all as read</button>
+  </div>
+  <div class="mb-3">
+    <div class="btn-group">
+      <a href="?" class="btn btn-sm btn-outline-secondary {% if not category %}active{% endif %}">All</a>
+      <a href="?category=placement" class="btn btn-sm btn-outline-secondary {% if category == 'placement' %}active{% endif %}">Placement</a>
+      <a href="?category=internship" class="btn btn-sm btn-outline-secondary {% if category == 'internship' %}active{% endif %}">Internship</a>
+      <a href="?category=rlabs" class="btn btn-sm btn-outline-secondary {% if category == 'rlabs' %}active{% endif %}">RLabs</a>
+      <a href="?category=research" class="btn btn-sm btn-outline-secondary {% if category == 'research' %}active{% endif %}">Research</a>
+      <a href="?category=events" class="btn btn-sm btn-outline-secondary {% if category == 'events' %}active{% endif %}">Events</a>
+    </div>
+  </div>
+  <div class="rcss-card p-3">
+    {% for n in notifications %}
+      <div class="notif-item p-3 mb-2 rounded {% if not n.is_read %}unread{% endif %}">
+        <div class="d-flex justify-content-between">
+          <div>
+            <strong>{{ n.title }}</strong>
+            <p class="mb-1">{{ n.message }}</p>
+            <span class="small text-muted">{{ n.created_at|date:"d M Y, g:i A" }} &middot; {{ n.get_category_display }}</span>
+          </div>
+          <div class="text-end">
+            {% if n.url %}<a href="{{ n.url }}" class="btn btn-sm btn-outline-primary mb-1">View</a>{% endif %}
+            {% if not n.is_read %}<button class="btn btn-sm btn-outline-secondary mark-read-btn d-block" data-url="{% url 'notifications:mark_read' n.pk %}">Mark read</button>{% endif %}
+          </div>
+        </div>
+      </div>
+    {% empty %}
+      <div class="empty-state"><i class="bi bi-bell-slash"></i>No notifications yet.</div>
+    {% endfor %}
+  </div>
+</div>
+{% endblock %}

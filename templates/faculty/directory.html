@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% block title %}Faculty Directory - RCSS Connect{% endblock %}
+{% block content %}
+<div class="container py-4">
+  <h3 class="section-title">Faculty Directory</h3>
+  <form class="row g-2 mb-4" method="get">
+    <div class="col-md-4">
+      <select name="department" class="form-select" onchange="this.form.submit()">
+        <option value="">All Departments</option>
+        {% for d in departments %}<option value="{{ d.id }}">{{ d.name }}</option>{% endfor %}
+      </select>
+    </div>
+  </form>
+  <div class="row g-4">
+    {% for f in faculty %}
+    <div class="col-md-4 col-lg-3">
+      <div class="rcss-card p-3 text-center h-100">
+        {% if f.profile_photo %}<img src="{{ f.profile_photo.url }}" class="rounded-circle mb-2" width="80" height="80" style="object-fit:cover;">{% else %}<i class="bi bi-person-badge display-5 text-primary"></i>{% endif %}
+        <h6 class="mb-0">{{ f.user.get_full_name }}</h6>
+        <p class="small text-muted">{{ f.get_designation_display }}<br>{{ f.department.name }}</p>
+        <a href="{% url 'faculty:detail' f.pk %}" class="btn btn-sm btn-outline-primary rounded-pill-btn">View Profile</a>
+      </div>
+    </div>
+    {% empty %}
+    <div class="empty-state col-12"><i class="bi bi-person-badge"></i>No faculty profiles found.</div>
+    {% endfor %}
+  </div>
+</div>
+{% endblock %}

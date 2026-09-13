@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% block title %}{{ internship.title }}{% endblock %}
+{% block content %}
+<div class="container py-4">
+  <div class="rcss-card p-4">
+    <h3>{{ internship.title }}</h3>
+    <p class="text-muted">{{ internship.company.name }} &middot; {{ internship.location }}</p>
+    <div class="row mb-3">
+      <div class="col-md-3"><strong>Duration</strong><p>{{ internship.duration }}</p></div>
+      <div class="col-md-3"><strong>Stipend</strong><p>{{ internship.stipend|default:"Unpaid" }}</p></div>
+      <div class="col-md-3"><strong>Start Date</strong><p>{{ internship.start_date }}</p></div>
+      <div class="col-md-3"><strong>Deadline</strong><p>{{ internship.application_deadline }}</p></div>
+    </div>
+    <p><strong>Skills Required:</strong> {{ internship.skills_required|default:"Not specified" }}</p>
+    <p>{{ internship.description|linebreaks }}</p>
+    {% if user.is_authenticated and user.role == "student" %}
+      {% if already_applied %}
+        <button class="btn btn-success rounded-pill-btn" disabled>Already Applied</button>
+      {% else %}
+        <a href="{% url 'internship:apply' internship.pk %}" class="btn btn-primary rounded-pill-btn px-4">Apply Now</a>
+      {% endif %}
+    {% elif not user.is_authenticated %}
+      <a href="{% url 'accounts:login' %}" class="btn btn-primary rounded-pill-btn">Login to Apply</a>
+    {% endif %}
+    {% if internship.application_link %}<a href="{{ internship.application_link }}" target="_blank" class="btn btn-outline-secondary rounded-pill-btn">External Link</a>{% endif %}
+  </div>
+</div>
+{% endblock %}

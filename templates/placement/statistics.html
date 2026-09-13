@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+{% block title %}Placement Statistics - RCSS Connect{% endblock %}
+{% block content %}
+<div class="container py-4">
+  <h3 class="section-title">Placement Analytics</h3>
+  <div class="row g-3 mb-4">
+    <div class="col-6 col-md-3"><div class="stat-card text-center"><h3 id="stat-placed">-</h3><small>Total Placed</small></div></div>
+    <div class="col-6 col-md-3"><div class="stat-card text-center"><h3 id="stat-companies">-</h3><small>Total Companies</small></div></div>
+    <div class="col-6 col-md-3"><div class="stat-card text-center"><h3 id="stat-highest">-</h3><small>Highest Package</small></div></div>
+    <div class="col-6 col-md-3"><div class="stat-card text-center"><h3 id="stat-average">-</h3><small>Average Package</small></div></div>
+  </div>
+  <div class="row g-4">
+    <div class="col-md-6"><div class="rcss-card p-3"><h6>Department-wise Placements</h6><canvas id="deptChart"></canvas></div></div>
+    <div class="col-md-6"><div class="rcss-card p-3"><h6>Year-wise Placements</h6><canvas id="yearChart"></canvas></div></div>
+    <div class="col-md-6"><div class="rcss-card p-3"><h6>Company-wise Hiring</h6><canvas id="companyPie"></canvas></div></div>
+    <div class="col-md-6"><div class="rcss-card p-3"><h6>Overall Distribution</h6><canvas id="companyDoughnut"></canvas></div></div>
+  </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+fetch("{% url 'placement:statistics_data' %}")
+  .then(r => r.json())
+  .then(data => {
+    document.getElementById("stat-placed").textContent = data.total_placed;
+    document.getElementById("stat-companies").textContent = data.total_companies;
+    document.getElementById("stat-highest").textContent = data.highest_package + " LPA";
+    document.getElementById("stat-average").textContent = data.average_package + " LPA";
+
+    new Chart(document.getElementById("deptChart"), {
+      type: "bar",
+      data: { labels: data.department_labels, datasets: [{ label: "Placed", data: data.department_data, backgroundColor: "#2f6fed" }] },
+    });
+    new Chart(document.getElementById("yearChart"), {
+      type: "line",
+      data: { labels: data.year_labels, datasets: [{ label: "Placements", data: data.year_data, borderColor: "#1a3a8f", fill: false, tension: 0.3 }] },
+    });
+    new Chart(document.getElementById("companyPie"), {
+      type: "pie",
+      data: { labels: data.company_labels, datasets: [{ data: data.company_data }] },
+    });
+    new Chart(document.getElementById("companyDoughnut"), {
+      type: "doughnut",
+      data: { labels: data.company_labels, datasets: [{ data: data.company_data }] },
+    });
+  });
+</script>
+{% endblock %}

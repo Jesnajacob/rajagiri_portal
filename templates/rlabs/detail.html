@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+{% block title %}{{ project.title }} - RLabs{% endblock %}
+{% block content %}
+<div class="container py-4">
+  <div class="rcss-card p-4">
+    <div class="d-flex justify-content-between">
+      <h3>{{ project.title }}</h3>
+      <span class="badge badge-status-{{ project.status }} align-self-start">{{ project.get_status_display }}</span>
+    </div>
+    <p class="text-muted">Mentor: {{ project.faculty_mentor.user.get_full_name|default:"To be assigned" }}</p>
+    <div class="row mb-3">
+      <div class="col-md-4"><strong>Students Required</strong><p>{{ project.students_required }}</p></div>
+      <div class="col-md-4"><strong>Duration</strong><p>{{ project.duration|default:"Not specified" }}</p></div>
+      <div class="col-md-4"><strong>Deadline</strong><p>{{ project.deadline }}</p></div>
+    </div>
+    <p><strong>Required Skills:</strong> {{ project.required_skills }}</p>
+    <p>{{ project.description|linebreaks }}</p>
+    {% if user.is_authenticated and user.role == "student" %}
+      {% if already_applied %}
+        <button class="btn btn-success rounded-pill-btn" disabled>Already Applied</button>
+      {% else %}
+        <form method="post" action="{% url 'rlabs:apply' project.pk %}">
+          {% csrf_token %}
+          <button type="submit" class="btn btn-primary rounded-pill-btn px-4" data-confirm="Apply for {{ project.title }}?">Apply Now</button>
+        </form>
+      {% endif %}
+    {% elif not user.is_authenticated %}
+      <a href="{% url 'accounts:login' %}" class="btn btn-primary rounded-pill-btn">Login to Apply</a>
+    {% endif %}
+  </div>
+</div>
+{% endblock %}

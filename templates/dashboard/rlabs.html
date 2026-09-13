@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% block title %}RLabs Dashboard - RCSS Connect{% endblock %}
+{% block content %}
+<div class="container py-4">
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <h4>RLabs Coordinator Dashboard</h4>
+    <a href="{% url 'rlabs:create' %}" class="btn btn-primary rounded-pill-btn">New Project</a>
+  </div>
+  <div class="row g-3 mb-4">
+    <div class="col-6 col-md-3"><div class="stat-card text-center"><h4 class="counter" data-count="{{ total_projects }}">0</h4><small>Total Projects</small></div></div>
+    <div class="col-6 col-md-3"><div class="stat-card text-center"><h4 class="counter" data-count="{{ open_projects }}">0</h4><small>Open Projects</small></div></div>
+    <div class="col-6 col-md-3"><div class="stat-card text-center"><h4 class="counter" data-count="{{ total_applications }}">0</h4><small>Applications</small></div></div>
+  </div>
+  <div class="mb-4"><a href="{% url 'rlabs:manage_list' %}" class="btn btn-outline-primary rounded-pill-btn">Manage All Projects</a></div>
+  <div class="rcss-card p-3">
+    <h5>Recent Projects</h5>
+    <table class="table align-middle mb-0">
+      <thead><tr><th>Title</th><th>Status</th><th>Published</th><th>Applicants</th></tr></thead>
+      <tbody>
+      {% for p in recent_projects %}
+        <tr><td>{{ p.title }}</td><td><span class="badge badge-status-{{ p.status }}">{{ p.get_status_display }}</span></td>
+        <td>{% if p.is_published %}Yes{% else %}No{% endif %}</td><td>{{ p.applications.count }}</td></tr>
+      {% empty %}<tr><td colspan="4" class="empty-state"><i class="bi bi-cpu"></i>No projects yet.</td></tr>{% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock %}

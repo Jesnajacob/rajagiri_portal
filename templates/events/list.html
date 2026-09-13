@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+{% block title %}Events - RCSS Connect{% endblock %}
+{% block content %}
+<div class="container py-4">
+  <div class="d-flex justify-content-between mb-3">
+    <h3 class="section-title mb-0">Upcoming Events</h3>
+    {% if user.is_authenticated and user.role in "faculty placement_officer rlabs_coordinator admin" %}
+      <a href="{% url 'events:create' %}" class="btn btn-primary rounded-pill-btn"><i class="bi bi-plus-lg"></i> Create Event</a>
+    {% endif %}
+  </div>
+  <div class="row g-4">
+    {% for e in events %}
+    <div class="col-md-6 col-lg-4">
+      <div class="rcss-card p-3 h-100">
+        <span class="badge bg-primary-subtle text-primary mb-2">{{ e.get_event_type_display }}</span>
+        <strong class="d-block">{{ e.title }}</strong>
+        <p class="small text-muted mb-1"><i class="bi bi-calendar-event"></i> {{ e.date|date:"d M Y, g:i A" }}</p>
+        <p class="small text-muted mb-2"><i class="bi bi-geo-alt"></i> {{ e.venue }} &middot; {{ e.seats_left }} seats left</p>
+        <a href="{% url 'events:detail' e.pk %}" class="btn btn-sm btn-primary rounded-pill-btn">
+          {% if e.pk in registered_ids %}Registered &check;{% else %}View & Register{% endif %}
+        </a>
+      </div>
+    </div>
+    {% empty %}<div class="empty-state col-12"><i class="bi bi-calendar-event"></i>No upcoming events.</div>{% endfor %}
+  </div>
+
+  {% if past_events %}
+  <h4 class="section-title mt-5">Past Events</h4>
+  <div class="row g-3">
+    {% for e in past_events %}
+    <div class="col-md-4"><div class="rcss-card p-3"><strong>{{ e.title }}</strong><p class="small text-muted mb-0">{{ e.date|date:"d M Y" }}</p></div></div>
+    {% endfor %}
+  </div>
+  {% endif %}
+</div>
+{% endblock %}
