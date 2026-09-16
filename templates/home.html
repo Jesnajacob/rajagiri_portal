@@ -3,25 +3,41 @@
 {% block title %}RCSS Connect - Home{% endblock %}
 
 {% block content %}
-<section class="hero-section text-center">
+<section class="hero-section">
   <div class="container fade-in">
-    <span class="badge bg-light text-primary rounded-pill px-3 py-2 mb-3">Rajagiri College of Social Sciences</span>
-    <h1 class="display-5 mb-3">Integrated Career, Research &amp; Student<br>Collaboration Portal</h1>
-    <p class="lead col-lg-8 mx-auto mb-4">
-      RCSS Connect brings Students, Faculty, Placement Cell, Alumni, RLabs and Administrators
-      onto one platform — so opportunities in placements, internships, research and RLabs
-      never get missed again.
-    </p>
-    {% if not user.is_authenticated %}
-    <a href="{% url 'accounts:register' %}" class="btn btn-light btn-hero btn-lg me-2">Get Started</a>
-    <a href="{% url 'accounts:login' %}" class="btn btn-outline-light btn-hero btn-lg">Login</a>
-    {% else %}
-    <a href="{% url 'dashboard:redirect' %}" class="btn btn-light btn-hero btn-lg">Go to Dashboard</a>
-    {% endif %}
+    <div class="hero-row">
+      <div class="hero-copy">
+        <span class="eyebrow">Rajagiri College of Social Sciences</span>
+        <h1>Integrated Career, Research &amp; Student Collaboration Portal</h1>
+        <p>
+          RCSS Connect brings Students, Faculty, Placement Cell, Alumni, RLabs and Administrators
+          onto one platform — so opportunities in placements, internships, research and RLabs
+          never get missed again.
+        </p>
+        <div class="hero-actions">
+          {% if not user.is_authenticated %}
+          <a href="{% url 'accounts:register' %}" class="btn btn-primary btn-hero btn-lg me-2">Get Started</a>
+          <a href="{% url 'accounts:login' %}" class="btn btn-outline-dark btn-hero btn-lg">Login</a>
+          {% else %}
+          <a href="{% url 'dashboard:redirect' %}" class="btn btn-primary btn-hero btn-lg">Go to Dashboard</a>
+          {% endif %}
+        </div>
+      </div>
+
+      <div class="hero-visual">
+        <div class="hero-image-wrap">
+          <img src="{% static 'images/RAJA-GIRI-COLLEGE-.gif' %}" alt="Rajagiri College of Social Sciences campus">
+        </div>
+        <div class="hero-metric">
+          <strong>10+</strong>
+          <span>Years of student growth</span>
+        </div>
+      </div>
+    </div>
   </div>
 </section>
 
-<div class="container">
+<div class="container home-page">
   <!-- Stats -->
   <div class="row g-3 mt-n5">
     <div class="col-6 col-md-3">
@@ -38,8 +54,35 @@
     </div>
   </div>
 
+  <section class="feature-band" aria-label="RCSS Connect capabilities">
+    <div class="feature-strip">
+      <div class="feature-intro">
+        <span class="eyebrow">One connected campus</span>
+        <h2>Everything your next step needs.</h2>
+        <p>Move from learning to opportunity with one shared space for the RCSS community.</p>
+      </div>
+      <div class="feature-grid">
+        <a class="feature-item" href="{% url 'placement:list' %}">
+          <i class="bi bi-briefcase"></i>
+          <strong>Find opportunities</strong>
+          <span>Placements and internships in one focused feed.</span>
+        </a>
+        <a class="feature-item" href="{% url 'research:list' %}">
+          <i class="bi bi-lightbulb"></i>
+          <strong>Build ideas</strong>
+          <span>Discover research and RLabs projects to join.</span>
+        </a>
+        <a class="feature-item" href="{% url 'alumni:directory' %}">
+          <i class="bi bi-people"></i>
+          <strong>Stay connected</strong>
+          <span>Learn from faculty, alumni, and peers.</span>
+        </a>
+      </div>
+    </div>
+  </section>
+
   <!-- Placement Drives -->
-  <div class="mt-5">
+  <div class="home-content-section placement-section mt-5">
     <div class="d-flex justify-content-between align-items-center">
       <h3 class="section-title">Latest Placement Drives</h3>
       <a href="{% url 'placement:list' %}" class="small">View all &rarr;</a>
@@ -47,7 +90,7 @@
     <div class="row g-4">
       {% for drive in placement_drives %}
       <div class="col-md-6 col-lg-3">
-        <div class="rcss-card p-3 h-100">
+        <div class="rcss-card placement-card p-4 h-100">
           <div class="d-flex align-items-center gap-2 mb-2">
             {% if drive.company.logo %}<img src="{{ drive.company.logo.url }}" width="36" height="36" class="rounded" alt="">{% else %}<i class="bi bi-building fs-4 text-primary"></i>{% endif %}
             <strong>{{ drive.company.name }}</strong>
@@ -64,7 +107,7 @@
   </div>
 
   <!-- Internships -->
-  <div class="mt-5">
+  <div class="home-content-section internship-section mt-5">
     <div class="d-flex justify-content-between align-items-center">
       <h3 class="section-title">Latest Internship Opportunities</h3>
       <a href="{% url 'internship:list' %}" class="small">View all &rarr;</a>
@@ -86,7 +129,7 @@
   </div>
 
   <!-- RLabs -->
-  <div class="mt-5">
+  <div class="home-content-section dark-content-section mt-5">
     <div class="d-flex justify-content-between align-items-center">
       <h3 class="section-title">Latest RLabs Projects</h3>
       <a href="{% url 'rlabs:list' %}" class="small">View all &rarr;</a>
@@ -108,7 +151,7 @@
   </div>
 
   <!-- Research -->
-  <div class="mt-5">
+  <div class="home-content-section research-section mt-5">
     <div class="d-flex justify-content-between align-items-center">
       <h3 class="section-title">Research Opportunities</h3>
       <a href="{% url 'research:list' %}" class="small">View all &rarr;</a>
@@ -130,7 +173,7 @@
   </div>
 
   <!-- Events -->
-  <div class="mt-5">
+  <div class="home-content-section dark-content-section mt-5">
     <div class="d-flex justify-content-between align-items-center">
       <h3 class="section-title">Upcoming Events</h3>
       <a href="{% url 'events:list' %}" class="small">View all &rarr;</a>
@@ -152,7 +195,7 @@
   </div>
 
   <!-- Alumni + Achievements -->
-  <div class="row mt-5 g-4">
+  <div class="home-content-section alumni-section row mt-5 g-4">
     <div class="col-lg-6">
       <h3 class="section-title">Alumni Highlights</h3>
       {% for a in alumni_highlights %}
@@ -182,5 +225,101 @@
       {% endfor %}
     </div>
   </div>
+
+  <section class="company-showcase" aria-label="Companies connected with RCSS students">
+    <div class="company-showcase-heading">
+      <h2>Teams our students work with.</h2>
+      <div>
+        <p>Connecting ambition with organizations that create meaningful opportunities.</p>
+        <blockquote class="company-quote">"Great opportunities begin with meaningful connections."</blockquote>
+      </div>
+    </div>
+    <div class="company-marquee" aria-label="Placement partner companies">
+      <div class="company-track company-track-left">
+        {% for company in partner_companies %}
+        <div class="company-mark">
+          {% if company.logo %}
+          <img src="{{ company.logo.url }}" alt="{{ company.name }} logo">
+          {% else %}
+          <span>{{ company.name }}</span>
+          {% endif %}
+        </div>
+        {% empty %}
+        <div class="company-mark"><span>Our placement partners</span></div>
+        {% endfor %}
+        {% for company in partner_companies %}
+        <div class="company-mark" aria-hidden="true">
+          {% if company.logo %}
+          <img src="{{ company.logo.url }}" alt="">
+          {% else %}
+          <span>{{ company.name }}</span>
+          {% endif %}
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+    <div class="company-marquee company-marquee-bottom" aria-label="Placement partner companies moving right">
+      <div class="company-track company-track-right">
+        {% for company in partner_companies %}
+        <div class="company-mark">
+          {% if company.logo %}
+          <img src="{{ company.logo.url }}" alt="{{ company.name }} logo">
+          {% else %}
+          <span>{{ company.name }}</span>
+          {% endif %}
+        </div>
+        {% endfor %}
+        {% for company in partner_companies %}
+        <div class="company-mark" aria-hidden="true">
+          {% if company.logo %}
+          <img src="{{ company.logo.url }}" alt="">
+          {% else %}
+          <span>{{ company.name }}</span>
+          {% endif %}
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+    <div class="company-marquee company-marquee-third" aria-label="Placement partner companies moving left">
+      <div class="company-track company-track-left">
+        {% for company in partner_companies %}
+        <div class="company-mark">
+          {% if company.logo %}
+          <img src="{{ company.logo.url }}" alt="{{ company.name }} logo">
+          {% else %}
+          <span>{{ company.name }}</span>
+          {% endif %}
+        </div>
+        {% endfor %}
+        {% for company in partner_companies %}
+        <div class="company-mark" aria-hidden="true">
+          {% if company.logo %}
+          <img src="{{ company.logo.url }}" alt="">
+          {% else %}
+          <span>{{ company.name }}</span>
+          {% endif %}
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+  </section>
+
+  <section class="home-cta">
+    <img class="home-cta-team" src="{% static 'images/ChatGPT Image Sep 13, 2026, 08_51_13 PM.png' %}" alt="RCSS student team">
+    <div class="home-cta-copy">
+      <span class="eyebrow">Your RCSS journey, together</span>
+      <h2>Let&rsquo;s connect.</h2>
+      <p>Keep your career, research, and campus community moving in the same direction.</p>
+    </div>
+    <div class="home-cta-actions">
+      {% if not user.is_authenticated %}
+      <a href="{% url 'accounts:register' %}" class="home-cta-button">Join RCSS Connect <i class="bi bi-arrow-up-right"></i></a>
+      <a href="{% url 'accounts:login' %}" class="home-cta-button">Sign in <i class="bi bi-arrow-up-right"></i></a>
+      {% else %}
+      <a href="{% url 'dashboard:redirect' %}" class="home-cta-button">Open Dashboard <i class="bi bi-arrow-up-right"></i></a>
+      <a href="{% url 'core:search' %}" class="home-cta-button">Explore RCSS <i class="bi bi-arrow-up-right"></i></a>
+      {% endif %}
+    </div>
+  </section>
 </div>
 {% endblock %}

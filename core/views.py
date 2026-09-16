@@ -22,6 +22,7 @@ def home(request):
         "events": Event.objects.filter(date__gte=now).order_by("date")[:4],
         "alumni_highlights": AlumniProfile.objects.select_related("user").order_by("-id")[:4],
         "achievements": Achievement.objects.filter(is_featured=True).select_related("user")[:6],
+        "partner_companies": Company.objects.all(),
         "total_students": StudentProfile.objects.count(),
         "total_companies": Company.objects.count(),
         "total_placed": StudentProfile.objects.filter(placement_applications__status="selected").distinct().count(),

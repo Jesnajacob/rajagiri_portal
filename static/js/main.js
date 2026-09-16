@@ -7,7 +7,60 @@ document.addEventListener("DOMContentLoaded", function () {
   initLiveFilter();
   initFormValidation();
   animateCounters();
+  initHeroSlideshow();
+  initHeadingMotion();
 });
+
+function initHeadingMotion() {
+  const headings = document.querySelectorAll(
+    ".hero-section h1, .feature-intro h2, .section-title, .company-showcase h2, .home-cta h2"
+  );
+  if (!headings.length) return;
+
+  headings.forEach(function (heading) {
+    heading.classList.add("motion-heading");
+  });
+
+  if (!("IntersectionObserver" in window)) {
+    headings.forEach(function (heading) {
+      heading.classList.add("is-visible");
+    });
+    return;
+  }
+
+  const observer = new IntersectionObserver(function (entries, currentObserver) {
+    entries.forEach(function (entry) {
+      if (!entry.isIntersecting) return;
+      entry.target.classList.add("is-visible");
+      currentObserver.unobserve(entry.target);
+    });
+  }, { threshold: 0.2 });
+
+  headings.forEach(function (heading) {
+    observer.observe(heading);
+  });
+}
+
+function initHeroSlideshow() {
+  const heroImage = document.querySelector(".hero-image-wrap img");
+  if (!heroImage) return;
+
+  const slides = [
+    "/static/images/RAJA-GIRI-COLLEGE-.gif",
+    "/static/images/IMG_3571%20copy.jpg",
+    "/static/images/1402-760829.webp"
+  ];
+  let index = 0;
+
+  setInterval(function () {
+    heroImage.style.opacity = "0";
+    setTimeout(function () {
+      index = (index + 1) % slides.length;
+      heroImage.src = slides[index];
+      heroImage.style.opacity = "1";
+    }, 220);
+  }, 5000);
+}
 
 function getCsrfToken() {
   const el = document.querySelector('meta[name="csrf-token"]');

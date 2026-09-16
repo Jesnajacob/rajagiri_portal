@@ -51,6 +51,7 @@ MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
+    "core.middleware.NoStoreAuthenticationMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
@@ -81,11 +82,10 @@ WSGI_APPLICATION = "rcss_connect.wsgi.application"
 # --------------------------------------------------------------------------
 # DATABASE
 # --------------------------------------------------------------------------
-# Credentials are controlled entirely through environment variables so they
-# can be changed without touching this file. DB_ENGINE defaults to "mysql".
-# For quick local testing without a MySQL server, set DB_ENGINE=sqlite.
+# Use SQLite by default for local development so the app works without a
+# running MySQL server. Set DB_ENGINE=mysql only when you want MySQL.
 
-DB_ENGINE = os.environ.get("DB_ENGINE", "mysql")
+DB_ENGINE = os.environ.get("DB_ENGINE", "sqlite")
 
 if DB_ENGINE == "sqlite":
     DATABASES = {
