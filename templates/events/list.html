@@ -4,20 +4,28 @@
 <div class="container py-4">
   <div class="d-flex justify-content-between mb-3">
     <h3 class="section-title mb-0">Upcoming Events</h3>
-    {% if user.is_authenticated and user.role in "faculty placement_officer rlabs_coordinator admin" %}
-      <a href="{% url 'events:create' %}" class="btn btn-primary rounded-pill-btn"><i class="bi bi-plus-lg"></i> Create Event</a>
+    {% if user.is_authenticated and user.role in "faculty rlabs_coordinator admin" %}
+      <div class="d-flex gap-2">
+        <a href="{% url 'events:manage_list' %}" class="btn btn-outline-primary rounded-pill-btn"><i class="bi bi-gear"></i> Manage Events</a>
+        <a href="{% url 'events:create' %}" class="btn btn-primary rounded-pill-btn"><i class="bi bi-plus-lg"></i> Create Event</a>
+      </div>
     {% endif %}
   </div>
   <div class="row g-4">
     {% for e in events %}
     <div class="col-md-6 col-lg-4">
       <div class="rcss-card p-3 h-100">
+        {% if e.banner %}
+          <img src="{{ e.banner.url }}" class="w-100 rounded mb-3" style="height:180px; object-fit:cover;" alt="{{ e.title }} banner">
+        {% endif %}
         <span class="badge bg-primary-subtle text-primary mb-2">{{ e.get_event_type_display }}</span>
         <strong class="d-block">{{ e.title }}</strong>
         <p class="small text-muted mb-1"><i class="bi bi-calendar-event"></i> {{ e.date|date:"d M Y, g:i A" }}</p>
         <p class="small text-muted mb-2"><i class="bi bi-geo-alt"></i> {{ e.venue }} &middot; {{ e.seats_left }} seats left</p>
         <a href="{% url 'events:detail' e.pk %}" class="btn btn-sm btn-primary rounded-pill-btn">
-          {% if e.pk in registered_ids %}Registered &check;{% else %}View & Register{% endif %}
+          {% if user.is_authenticated and user.role == "student" %}
+            {% if e.pk in registered_ids %}Registered &check;{% else %}View & Register{% endif %}
+          {% else %}View{% endif %}
         </a>
       </div>
     </div>

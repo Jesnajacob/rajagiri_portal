@@ -19,9 +19,6 @@ NOTICE_CATEGORY_CHOICES = [
     ("academic", "Academic"),
     ("placement", "Placement"),
     ("internship", "Internship"),
-    ("rlabs", "RLabs"),
-    ("research", "Research"),
-    ("events", "Events"),
     ("general", "General"),
 ]
 

@@ -8,7 +8,8 @@ from .models import ResearchOpportunity, ResearchApplication, ResearchPaper, Res
 from .forms import ResearchOpportunityForm, ResearchApplicationForm, ResearchPaperForm
 from students.models import StudentProfile
 from faculty.models import FacultyProfile
-from notifications.models import notify_bulk, notify
+from notifications.models import notify_bulk, notify, notify_once
+from notifications.services import send_research_email
 
 
 def opportunity_list(request):
@@ -44,6 +45,13 @@ def apply_opportunity(request, pk):
                 defaults={"statement_of_interest": form.cleaned_data["statement_of_interest"]},
             )
             if created:
+                notify_once(
+                    opportunity.faculty.user,
+                    f"New Research Application: {opportunity.topic}",
+                    f"{request.user.get_full_name() or request.user.username} applied for your research opportunity '{opportunity.topic}'.",
+                    category="research",
+                    url=reverse("research:opportunity_applicants", args=[opportunity.pk]),
+                )
                 messages.success(request, "Application submitted.")
             else:
                 messages.info(request, "You already applied to this opportunity.")
@@ -82,7 +90,14 @@ def opportunity_create(request):
                 category="research",
                 url=reverse("research:detail", args=[opp.pk]),
             )
-            messages.success(request, f"Research opportunity posted. {len(matched)} student(s) notified.")
+            email_failures = 0
+            for user in matched:
+                if user.email and not send_research_email(user, opp):
+                    email_failures += 1
+            if email_failures:
+                messages.warning(request, "Opportunity posted successfully, but some email notifications could not be sent.")
+            else:
+                messages.success(request, f"Research opportunity posted. {len(matched)} student(s) notified.")
             return redirect("research:my_opportunities")
     else:
         form = ResearchOpportunityForm()
@@ -139,7 +154,7 @@ def review_application(request, pk):
     return redirect("research:opportunity_applicants", pk=app.opportunity.pk)
 
 
-# ---------------- Research Paper Repository ----------------
+
 
 def paper_list(request):
     papers = ResearchPaper.objects.select_related("faculty__user")

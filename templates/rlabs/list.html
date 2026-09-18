@@ -24,7 +24,9 @@
         <p class="small text-muted mb-1">Mentor: {{ p.faculty_mentor.user.get_full_name|default:"TBA" }}</p>
         <p class="small text-muted mb-2">Skills: {{ p.required_skills }}</p>
         <a href="{% url 'rlabs:detail' p.pk %}" class="btn btn-sm btn-primary rounded-pill-btn">
-          {% if p.pk in applied_ids %}Applied &check;{% else %}View & Apply{% endif %}
+          {% if user.is_authenticated and user.role == "student" %}
+            {% if p.pk in applied_ids %}Applied &check;{% else %}View & Apply{% endif %}
+          {% else %}View{% endif %}
         </a>
       </div>
     </div>

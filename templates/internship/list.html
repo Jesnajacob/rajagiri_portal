@@ -5,7 +5,10 @@
   <div class="d-flex justify-content-between mb-3">
     <h3 class="section-title mb-0">Internship Opportunities</h3>
     {% if user.is_authenticated and user.role in "placement_officer faculty alumni" %}
-      <a href="{% url 'internship:create' %}" class="btn btn-primary rounded-pill-btn"><i class="bi bi-plus-lg"></i> Post Internship</a>
+      <div class="d-flex gap-2">
+        <a href="{% url 'internship:manage_list' %}" class="btn btn-outline-primary rounded-pill-btn"><i class="bi bi-gear"></i> Manage Internships</a>
+        <a href="{% url 'internship:create' %}" class="btn btn-primary rounded-pill-btn"><i class="bi bi-plus-lg"></i> Post Internship</a>
+      </div>
     {% endif %}
   </div>
   <form class="row g-2 mb-4">
@@ -16,12 +19,20 @@
     {% for i in internships %}
     <div class="col-md-6 col-lg-4">
       <div class="rcss-card p-3 h-100">
-        <i class="bi bi-laptop fs-3 text-primary mb-2 d-block"></i>
+        <div class="d-flex align-items-center gap-2 mb-2">
+          {% if i.company.logo %}
+            <img src="{{ i.company.logo.url }}" width="42" height="42" class="rounded" alt="{{ i.company.name }} logo">
+          {% else %}
+            <i class="bi bi-laptop fs-3 text-primary d-block"></i>
+          {% endif %}
+        </div>
         <strong>{{ i.title }}</strong>
         <p class="small text-muted mb-1">{{ i.company.name }} &middot; {{ i.location }}</p>
         <p class="small text-muted mb-2">{{ i.duration }} {% if i.stipend %}&middot; {{ i.stipend }}{% endif %}</p>
         <a href="{% url 'internship:detail' i.pk %}" class="btn btn-sm btn-primary rounded-pill-btn">
-          {% if i.pk in applied_ids %}Applied &check;{% else %}View & Apply{% endif %}
+          {% if user.is_authenticated and user.role == "student" %}
+            {% if i.pk in applied_ids %}Applied &check;{% else %}View & Apply{% endif %}
+          {% else %}View{% endif %}
         </a>
       </div>
     </div>

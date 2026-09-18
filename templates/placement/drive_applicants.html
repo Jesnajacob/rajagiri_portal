@@ -2,16 +2,33 @@
 {% block title %}Applicants - {{ drive.job_role }}{% endblock %}
 {% block content %}
 <div class="container py-4">
-  <h3 class="section-title">Applicants: {{ drive.company.name }} - {{ drive.job_role }}</h3>
+  <div class="d-flex justify-content-between align-items-center flex-wrap gap-2 mb-3">
+    <h3 class="section-title mb-0">Applied Students: {{ drive.company.name }} - {{ drive.job_role }}</h3>
+    <div class="d-flex gap-2">
+      <a class="btn btn-sm btn-outline-primary rounded-pill-btn" href="{% url 'placement:export_applicants_csv' drive.pk %}?q={{ query|urlencode }}&course={{ selected_course|urlencode }}&department={{ selected_department|urlencode }}&batch={{ selected_batch|urlencode }}&status={{ selected_status|urlencode }}">Download CSV</a>
+      <a class="btn btn-sm btn-primary rounded-pill-btn" href="{% url 'placement:export_applicants_excel' drive.pk %}?q={{ query|urlencode }}&course={{ selected_course|urlencode }}&department={{ selected_department|urlencode }}&batch={{ selected_batch|urlencode }}&status={{ selected_status|urlencode }}">Download Excel</a>
+    </div>
+  </div>
+  <form method="get" class="row g-2 mb-3">
+    <div class="col-md-4"><input class="form-control" name="q" value="{{ query }}" placeholder="Search student..."></div>
+    <div class="col-md-2"><select class="form-select" name="course"><option value="">All Courses</option>{% for value, label in course_choices %}<option value="{{ value }}" {% if selected_course == value %}selected{% endif %}>{{ label }}</option>{% endfor %}</select></div>
+    <div class="col-md-2"><select class="form-select" name="department"><option value="">All Departments</option>{% for department in drive.eligible_departments.all %}<option value="{{ department.pk }}" {% if selected_department == department.pk|stringformat:'s' %}selected{% endif %}>{{ department.name }}</option>{% endfor %}</select></div>
+    <div class="col-md-2"><input class="form-control" name="batch" value="{{ selected_batch }}" placeholder="Batch"></div>
+    <div class="col-md-2"><select class="form-select" name="status"><option value="">All Statuses</option>{% for value, label in status_choices %}<option value="{{ value }}" {% if selected_status == value %}selected{% endif %}>{{ label }}</option>{% endfor %}</select></div>
+    <div class="col-12"><button class="btn btn-outline-primary rounded-pill-btn">Apply Filters</button> <a href="{% url 'placement:drive_applicants' drive.pk %}" class="btn btn-link">Clear</a></div>
+  </form>
+  {% if not applications %}<div class="alert alert-info">No students have applied for this placement drive yet.</div>{% endif %}
   <div class="rcss-card p-3">
-    <table class="table align-middle mb-0">
-      <thead><tr><th>Student</th><th>Department</th><th>CGPA</th><th>Status</th><th>Update Status</th></tr></thead>
+    <div class="table-responsive"><table class="table align-middle mb-0">
+      <thead><tr><th>Student</th><th>Course</th><th>Department</th><th>Email</th><th>Applied Date</th><th>Status</th><th>Update Status</th></tr></thead>
       <tbody>
       {% for app in applications %}
         <tr>
           <td>{{ app.student.user.get_full_name }} ({{ app.student.register_number }})</td>
+          <td>{{ app.student.get_course_display|default:"-" }}</td>
           <td>{{ app.student.department.name }}</td>
-          <td>{{ app.student.cgpa }}</td>
+          <td>{{ app.student.user.email }}</td>
+          <td>{{ app.applied_at|date:"d M Y" }}</td>
           <td><span class="badge badge-status-{{ app.status }}">{{ app.get_status_display }}</span></td>
           <td>
             <form method="post" action="{% url 'placement:update_status' app.pk %}" class="d-flex gap-2">
@@ -21,13 +38,24 @@
                   <option value="{{ value }}" {% if app.status == value %}selected{% endif %}>{{ label }}</option>
                 {% endfor %}
               </select>
+              <div class="form-check small text-nowrap">
+                <input class="form-check-input" type="checkbox" name="announce_to_students" id="announce-{{ app.pk }}">
+                <label class="form-check-label" for="announce-{{ app.pk }}">Announce</label>
+              </div>
+              <div class="form-check small text-nowrap">
+                <input class="form-check-input" type="checkbox" name="announce_name" id="announce-name-{{ app.pk }}">
+                <label class="form-check-label" for="announce-name-{{ app.pk }}">Show name</label>
+              </div>
+              <div class="form-check small text-nowrap">
+                <input class="form-check-input" type="checkbox" name="create_achievement" id="achievement-{{ app.pk }}">
+                <label class="form-check-label" for="achievement-{{ app.pk }}">Achievement</label>
+              </div>
               <button class="btn btn-sm btn-primary">Update</button>
             </form>
           </td>
         </tr>
-      {% empty %}<tr><td colspan="5" class="empty-state"><i class="bi bi-people"></i>No applicants yet.</td></tr>{% endfor %}
-      </tbody>
-    </table>
+      {% empty %}<tr><td colspan="7" class="empty-state"><i class="bi bi-people"></i>No applicants yet.</td></tr>{% endfor %}
+      </tbody></table></div>
   </div>
 </div>
 {% endblock %}

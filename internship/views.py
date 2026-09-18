@@ -2,11 +2,14 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.utils import timezone
+from django.urls import reverse
 
 from accounts.decorators import role_required
 from .models import Internship, InternshipApplication
 from .forms import InternshipForm, InternshipApplicationForm
 from students.models import StudentProfile
+from notifications.models import notify_bulk
+from notifications.services import send_internship_email
 
 
 def internship_list(request):
@@ -48,6 +51,15 @@ def apply_internship(request, pk):
                 defaults={"resume": form.cleaned_data.get("resume")},
             )
             if created:
+                from accounts.models import User
+                from notifications.models import notify_once
+                notify_once(
+                    User.objects.filter(role="placement_officer").first(),
+                    f"New Internship Application: {internship.company.name}",
+                    f"{request.user.get_full_name() or request.user.username} applied for {internship.title} at {internship.company.name}.",
+                    category="internship",
+                    url=reverse("internship:applicants", args=[internship.pk]),
+                )
                 messages.success(request, "Applied successfully!")
             else:
                 messages.info(request, "You already applied to this internship.")
@@ -59,6 +71,13 @@ def apply_internship(request, pk):
 
 @login_required
 @role_required("placement_officer", "faculty", "alumni")
+def manage_list(request):
+    internships = Internship.objects.select_related("company").all()
+    return render(request, "internship/manage_list.html", {"internships": internships})
+
+
+@login_required
+@role_required("placement_officer", "faculty", "alumni")
 def internship_create(request):
     if request.method == "POST":
         form = InternshipForm(request.POST)
@@ -66,7 +85,16 @@ def internship_create(request):
             internship = form.save(commit=False)
             internship.posted_by = request.user
             internship.save()
-            messages.success(request, "Internship opportunity posted.")
+            users = [student.user for student in StudentProfile.objects.select_related("user").all()]
+            notify_bulk(users, f"New Internship Opportunity: {internship.company.name}", f"{internship.title} at {internship.company.name} is now open.", category="internship", url=reverse("internship:detail", args=[internship.pk]))
+            email_failures = 0
+            for user in users:
+                if user.email and not send_internship_email(user, internship):
+                    email_failures += 1
+            if email_failures:
+                messages.warning(request, "Internship opportunity posted successfully, but some email notifications could not be sent.")
+            else:
+                messages.success(request, "Internship opportunity posted and notifications sent.")
             return redirect("internship:list")
     else:
         form = InternshipForm()

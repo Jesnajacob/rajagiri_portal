@@ -2,23 +2,43 @@
 {% block title %}Career Preparation Hub - RCSS Connect{% endblock %}
 {% block content %}
 <div class="container py-4">
-  <h3 class="section-title">Career Preparation Hub</h3>
-  {% for type_label, resources in grouped.items %}
-    <h5 class="mt-4">{{ type_label }}</h5>
-    <div class="row g-3">
-      {% for r in resources %}
-      <div class="col-md-4">
-        <div class="rcss-card p-3">
-          <strong>{{ r.title }}</strong>
-          <p class="small text-muted mb-2">{{ r.description|truncatechars:80 }}</p>
-          {% if r.file %}<a href="{{ r.file.url }}" target="_blank" class="btn btn-sm btn-outline-primary rounded-pill-btn">Download</a>{% endif %}
-          {% if r.link %}<a href="{{ r.link }}" target="_blank" class="btn btn-sm btn-outline-secondary rounded-pill-btn">Open Link</a>{% endif %}
+  <div class="d-flex justify-content-between align-items-center mb-3">
+    <h3 class="section-title mb-0">Career Preparation Hub</h3>
+    {% if user.is_authenticated and user.role == "placement_officer" or user.is_admin_role %}
+      <a href="{% url 'core:career_resource_create' %}" class="btn btn-primary rounded-pill-btn"><i class="bi bi-plus-lg"></i> Add Career Resource</a>
+    {% endif %}
+  </div>
+  <form method="get" class="row g-2 mb-4">
+    <div class="col-md-5"><input type="search" name="q" value="{{ query }}" class="form-control" placeholder="Search career resources"></div>
+    <div class="col-md-4">
+      <select name="category" class="form-select">
+        <option value="">All categories</option>
+        {% for value, label in categories %}<option value="{{ value }}" {% if selected_category == value %}selected{% endif %}>{{ label }}</option>{% endfor %}
+      </select>
+    </div>
+    <div class="col-md-2"><button type="submit" class="btn btn-outline-primary w-100 rounded-pill-btn">Search</button></div>
+    <div class="col-md-1"><a href="{% url 'core:career_hub' %}" class="btn btn-outline-secondary w-100 rounded-pill-btn" aria-label="Clear filters">Clear</a></div>
+  </form>
+  <div class="row g-3">
+    {% for r in resources %}
+    <div class="col-md-6 col-lg-4">
+      <div class="rcss-card p-3 h-100 d-flex flex-column">
+        <span class="badge bg-primary-subtle text-primary align-self-start mb-2">{{ r.get_resource_type_display }}</span>
+        <strong>{{ r.title }}</strong>
+        <p class="small text-muted mb-3">{{ r.description|default:"No description provided."|truncatechars:140 }}</p>
+        <div class="mt-auto d-flex flex-wrap gap-2">
+          {% if r.file %}<a href="{{ r.file.url }}" download class="btn btn-sm btn-outline-primary rounded-pill-btn"><i class="bi bi-download"></i> Download</a>{% endif %}
+          {% if r.link %}<a href="{{ r.link }}" target="_blank" rel="noopener" class="btn btn-sm btn-outline-secondary rounded-pill-btn"><i class="bi bi-box-arrow-up-right"></i> Open Link</a>{% endif %}
+          {% if user.is_authenticated and user.role == "placement_officer" or user.is_admin_role %}
+            <a href="{% url 'core:career_resource_edit' r.pk %}" class="btn btn-sm btn-outline-dark rounded-pill-btn">Edit</a>
+            <a href="{% url 'core:career_resource_delete' r.pk %}" class="btn btn-sm btn-outline-danger rounded-pill-btn">Delete</a>
+          {% endif %}
         </div>
       </div>
-      {% endfor %}
     </div>
-  {% empty %}
-    <div class="empty-state"><i class="bi bi-mortarboard"></i>No career resources uploaded yet.</div>
-  {% endfor %}
+    {% empty %}
+      <div class="empty-state col-12"><i class="bi bi-mortarboard"></i>No career resources uploaded yet.</div>
+    {% endfor %}
+  </div>
 </div>
 {% endblock %}

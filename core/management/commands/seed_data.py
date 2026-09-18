@@ -240,7 +240,7 @@ class Command(BaseCommand):
         Announcement.objects.get_or_create(
             title="Welcome to RCSS Connect!",
             defaults=dict(
-                message="RCSS Connect is now live. Explore placements, internships, RLabs and research opportunities all in one place.",
+                message="RCSS Connect is now live. Explore placements, internships, career resources, and student experiences in one place.",
                 category="general", posted_by=officer,
             ))
 

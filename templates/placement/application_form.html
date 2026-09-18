@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+{% block title %}Apply for {{ drive.job_role }} - RCSS Connect{% endblock %}
+{% block content %}
+<div class="placement-application-page">
+  <div class="container py-4">
+  <div class="row justify-content-center">
+    <div class="col-lg-8">
+      <div class="application-form-header">
+        <h1>Join the placement drive</h1>
+        <p>{{ drive.company.name }} &middot; {{ drive.job_role }}</p>
+      </div>
+      <form method="post" enctype="multipart/form-data">
+          {% csrf_token %}
+          <div class="application-form-card mb-3">
+            <h2>Candidate details</h2>
+            <p class="application-form-note">Upload your latest resume to continue. PDF, DOC, or DOCX only.</p>
+            {% with field=form.resume %}
+              <label class="form-label" for="{{ field.id_for_label }}">{{ field.label }} <span class="text-danger">*</span></label>
+              {{ field }}
+              {% for error in field.errors %}<div class="text-danger small">{{ error }}</div>{% endfor %}
+            {% endwith %}
+          </div>
+
+          {% if form.questions %}
+            <div class="application-form-card mb-3">
+              <h2>Placement questions</h2>
+              <p class="application-form-note">Please answer each question before submitting your application.</p>
+              {% for question, field in form.question_fields %}
+                  <div class="application-question">
+                    <label class="form-label" for="{{ field.id_for_label }}">{{ forloop.counter }}. {{ field.label }} <span class="text-danger">*</span></label>
+                    {{ field }}
+                    {% for error in field.errors %}<div class="text-danger small">{{ error }}</div>{% endfor %}
+                  </div>
+              {% endfor %}
+            </div>
+          {% endif %}
+
+          {% for hidden in form.hidden_fields %}{{ hidden }}{% endfor %}
+          <div class="application-form-actions">
+            <button type="submit" class="btn application-submit-button">Submit application</button>
+            <a href="{% url 'placement:detail' drive.pk %}" class="application-cancel-link">Cancel</a>
+          </div>
+      </form>
+    </div>
+  </div>
+  </div>
+</div>
+{% endblock %}

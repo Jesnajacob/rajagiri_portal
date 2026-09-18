@@ -30,7 +30,9 @@
         <p class="small text-muted mb-1">Package: {{ drive.package }} &middot; Min CGPA: {{ drive.minimum_cgpa }}</p>
         <p class="small text-muted mb-2">Deadline: {{ drive.registration_deadline|date:"d M Y, g:i A" }}</p>
         <a href="{% url 'placement:detail' drive.pk %}" class="btn btn-sm btn-primary rounded-pill-btn">
-          {% if drive.pk in applied_ids %}Applied &check;{% else %}View & Apply{% endif %}
+          {% if user.is_authenticated and user.role == "student" %}
+            {% if drive.pk in applied_ids %}Applied &check;{% else %}View & Apply{% endif %}
+          {% else %}View{% endif %}
         </a>
       </div>
     </div>

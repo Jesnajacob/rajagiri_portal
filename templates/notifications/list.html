@@ -8,12 +8,12 @@
   </div>
   <div class="mb-3">
     <div class="btn-group">
-      <a href="?" class="btn btn-sm btn-outline-secondary {% if not category %}active{% endif %}">All</a>
+      <a href="?" class="btn btn-sm btn-outline-secondary {% if not category and not status %}active{% endif %}">All</a>
+      <a href="?status=unread" class="btn btn-sm btn-outline-secondary {% if status == 'unread' %}active{% endif %}">Unread</a>
+      <a href="?status=read" class="btn btn-sm btn-outline-secondary {% if status == 'read' %}active{% endif %}">Read</a>
+      <a href="?status=important" class="btn btn-sm btn-outline-secondary {% if status == 'important' %}active{% endif %}">Important</a>
       <a href="?category=placement" class="btn btn-sm btn-outline-secondary {% if category == 'placement' %}active{% endif %}">Placement</a>
       <a href="?category=internship" class="btn btn-sm btn-outline-secondary {% if category == 'internship' %}active{% endif %}">Internship</a>
-      <a href="?category=rlabs" class="btn btn-sm btn-outline-secondary {% if category == 'rlabs' %}active{% endif %}">RLabs</a>
-      <a href="?category=research" class="btn btn-sm btn-outline-secondary {% if category == 'research' %}active{% endif %}">Research</a>
-      <a href="?category=events" class="btn btn-sm btn-outline-secondary {% if category == 'events' %}active{% endif %}">Events</a>
     </div>
   </div>
   <div class="rcss-card p-3">
@@ -21,7 +21,7 @@
       <div class="notif-item p-3 mb-2 rounded {% if not n.is_read %}unread{% endif %}">
         <div class="d-flex justify-content-between">
           <div>
-            <strong>{{ n.title }}</strong>
+            <strong>{% if n.priority == 'urgent' %}🚨 {% elif n.priority == 'important' %}⭐ {% endif %}{{ n.title }}</strong>
             <p class="mb-1">{{ n.message }}</p>
             <span class="small text-muted">{{ n.created_at|date:"d M Y, g:i A" }} &middot; {{ n.get_category_display }}</span>
           </div>

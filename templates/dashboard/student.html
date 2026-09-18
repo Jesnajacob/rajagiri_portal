@@ -6,14 +6,16 @@
     <div class="row align-items-center">
       <div class="col-md-8">
         <h4>Welcome back, {{ user.first_name }}! <span class="fs-6 text-muted">({{ profile.register_number }})</span></h4>
-        <p class="text-muted mb-2">You have <strong>{{ new_opportunities_total }}</strong> new opportunities waiting across Placement, Internship, RLabs and Research.</p>
+        <p class="mb-2"><strong>{{ course|default:"Course not set" }}</strong>{% if profile.batch %} &middot; {{ profile.batch }} Batch{% endif %}</p>
+        <p class="text-muted mb-2">You have <strong>{{ new_opportunities_total }}</strong> new placement and internship opportunities waiting.</p>
         <div class="progress" style="max-width:400px;">
           <div class="progress-bar bg-primary" style="width:{{ completion }}%;">{{ completion }}%</div>
         </div>
         <small class="text-muted">Profile completion</small>
       </div>
       <div class="col-md-4 text-md-end mt-3 mt-md-0">
-        <a href="{% url 'students:profile_edit' %}" class="btn btn-outline-primary rounded-pill-btn">Update Profile</a>
+        <a href="{% url 'students:profile_edit' %}" class="btn btn-outline-primary rounded-pill-btn me-2">Update Profile</a>
+        <a href="{% url 'notifications:preferences' %}" class="btn btn-outline-secondary rounded-pill-btn">Notification Settings</a>
       </div>
     </div>
   </div>
@@ -21,19 +23,17 @@
   <div class="row g-3 mb-4">
     <div class="col-6 col-md-2"><div class="stat-card text-center"><h4 class="counter" data-count="{{ available_drives_count }}">0</h4><small>Placement Drives</small></div></div>
     <div class="col-6 col-md-2"><div class="stat-card text-center"><h4 class="counter" data-count="{{ available_internships_count }}">0</h4><small>Internships</small></div></div>
-    <div class="col-6 col-md-2"><div class="stat-card text-center"><h4 class="counter" data-count="{{ available_research_count }}">0</h4><small>Research</small></div></div>
-    <div class="col-6 col-md-2"><div class="stat-card text-center"><h4 class="counter" data-count="{{ available_rlabs_count }}">0</h4><small>RLabs Projects</small></div></div>
-    <div class="col-6 col-md-2"><div class="stat-card text-center"><h4 class="counter" data-count="{{ upcoming_events_count }}">0</h4><small>Upcoming Events</small></div></div>
     <div class="col-6 col-md-2"><div class="stat-card text-center"><h4 class="counter" data-count="{{ unread_count }}">0</h4><small>Unread Notifications</small></div></div>
   </div>
 
   <div class="row g-2 mb-4">
     <div class="col-6 col-md-2"><a href="{% url 'placement:list' %}" class="btn btn-outline-primary w-100 rounded-pill-btn"><i class="bi bi-briefcase"></i> Placements</a></div>
     <div class="col-6 col-md-2"><a href="{% url 'internship:list' %}" class="btn btn-outline-primary w-100 rounded-pill-btn"><i class="bi bi-laptop"></i> Internships</a></div>
-    <div class="col-6 col-md-2"><a href="{% url 'rlabs:list' %}" class="btn btn-outline-primary w-100 rounded-pill-btn"><i class="bi bi-cpu"></i> RLabs</a></div>
-    <div class="col-6 col-md-2"><a href="{% url 'research:list' %}" class="btn btn-outline-primary w-100 rounded-pill-btn"><i class="bi bi-journal"></i> Research</a></div>
     <div class="col-6 col-md-2"><a href="{% url 'students:resume_upload' %}" class="btn btn-outline-primary w-100 rounded-pill-btn"><i class="bi bi-file-earmark-arrow-up"></i> Resume</a></div>
     <div class="col-6 col-md-2"><a href="{% url 'students:portfolio' %}" class="btn btn-outline-primary w-100 rounded-pill-btn"><i class="bi bi-person-badge"></i> Portfolio</a></div>
+    {% if can_submit_feedback %}<div class="col-6 col-md-2"><a href="{% url 'placement:feedback_create' %}" class="btn btn-primary w-100 rounded-pill-btn"><i class="bi bi-chat-square-text"></i> Give Feedback</a></div>{% endif %}
+    <div class="col-6 col-md-2"><a href="{% url 'placement:my_feedback' %}" class="btn btn-outline-primary w-100 rounded-pill-btn"><i class="bi bi-clock-history"></i> My Feedback</a></div>
+    <div class="col-6 col-md-2"><a href="{% url 'placement:feedback_list' %}" class="btn btn-outline-primary w-100 rounded-pill-btn"><i class="bi bi-stars"></i> Experiences</a></div>
   </div>
 
   <div class="row g-4">
@@ -49,15 +49,6 @@
         <a href="{% url 'notifications:list' %}" class="small">View all &rarr;</a>
       </div>
     </div>
-    <div class="col-lg-6">
-      <div class="rcss-card p-3">
-        <h5>Upcoming Events</h5>
-        {% for e in upcoming_events %}
-          <p class="small mb-1"><i class="bi bi-calendar-event"></i> {{ e.title }} - {{ e.date|date:"d M" }}</p>
-        {% empty %}<p class="text-muted small">No upcoming events.</p>{% endfor %}
-      </div>
-    </div>
-
     <div class="col-lg-3">
       <div class="rcss-card p-3">
         <h6>Placement Applications</h6>
@@ -68,18 +59,6 @@
       <div class="rcss-card p-3">
         <h6>Internship Applications</h6>
         {% for a in internship_apps %}<p class="small mb-1">{{ a.internship.title }} <span class="badge badge-status-{{ a.status }}">{{ a.get_status_display }}</span></p>{% empty %}<p class="text-muted small">None yet.</p>{% endfor %}
-      </div>
-    </div>
-    <div class="col-lg-3">
-      <div class="rcss-card p-3">
-        <h6>RLabs Applications</h6>
-        {% for a in rlabs_apps %}<p class="small mb-1">{{ a.project.title }} <span class="badge badge-status-{{ a.status }}">{{ a.get_status_display }}</span></p>{% empty %}<p class="text-muted small">None yet.</p>{% endfor %}
-      </div>
-    </div>
-    <div class="col-lg-3">
-      <div class="rcss-card p-3">
-        <h6>Research Applications</h6>
-        {% for a in research_apps %}<p class="small mb-1">{{ a.opportunity.topic }} <span class="badge badge-status-{{ a.status }}">{{ a.get_status_display }}</span></p>{% empty %}<p class="text-muted small">None yet.</p>{% endfor %}
       </div>
     </div>
   </div>

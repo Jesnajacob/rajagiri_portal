@@ -25,3 +25,9 @@ def validate_document_extension(value):
     ext = os.path.splitext(value.name)[1].lower()
     if ext not in settings.ALLOWED_DOCUMENT_EXTENSIONS:
         raise ValidationError("Unsupported document type.")
+
+
+def validate_question_file_extension(value):
+    ext = os.path.splitext(value.name)[1].lower()
+    if ext not in {".pdf", ".doc", ".docx"}:
+        raise ValidationError("Only PDF, DOC, and DOCX question files are allowed.")

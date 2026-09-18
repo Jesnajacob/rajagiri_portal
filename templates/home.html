@@ -10,9 +10,8 @@
         <span class="eyebrow">Rajagiri College of Social Sciences</span>
         <h1>Integrated Career, Research &amp; Student Collaboration Portal</h1>
         <p>
-          RCSS Connect brings Students, Faculty, Placement Cell, Alumni, RLabs and Administrators
-          onto one platform — so opportunities in placements, internships, research and RLabs
-          never get missed again.
+          RCSS Connect brings Students, Placement Cell, Alumni and Administrators onto one platform
+          so opportunities in placements, internships and career development never get missed again.
         </p>
         <div class="hero-actions">
           {% if not user.is_authenticated %}
@@ -67,10 +66,10 @@
           <strong>Find opportunities</strong>
           <span>Placements and internships in one focused feed.</span>
         </a>
-        <a class="feature-item" href="{% url 'research:list' %}">
-          <i class="bi bi-lightbulb"></i>
-          <strong>Build ideas</strong>
-          <span>Discover research and RLabs projects to join.</span>
+        <a class="feature-item" href="{% url 'placement:feedback_list' %}">
+          <i class="bi bi-chat-square-text"></i>
+          <strong>Learn from experience</strong>
+          <span>Read approved placement and interview experiences.</span>
         </a>
         <a class="feature-item" href="{% url 'alumni:directory' %}">
           <i class="bi bi-people"></i>
@@ -116,7 +115,11 @@
       {% for i in internships %}
       <div class="col-md-6 col-lg-3">
         <div class="rcss-card p-3 h-100">
-          <i class="bi bi-laptop fs-4 text-primary mb-2 d-block"></i>
+          {% if i.company.logo %}
+            <img src="{{ i.company.logo.url }}" width="42" height="42" class="rounded mb-2" alt="{{ i.company.name }} logo">
+          {% else %}
+            <i class="bi bi-laptop fs-4 text-primary mb-2 d-block"></i>
+          {% endif %}
           <p class="fw-semibold mb-1">{{ i.title }}</p>
           <p class="text-muted small mb-2">{{ i.company.name }} &middot; {{ i.duration }}</p>
           <a href="{% url 'internship:detail' i.pk %}" class="btn btn-sm btn-outline-primary rounded-pill-btn">View Details</a>
@@ -128,86 +131,32 @@
     </div>
   </div>
 
-  <!-- RLabs -->
-  <div class="home-content-section dark-content-section mt-5">
-    <div class="d-flex justify-content-between align-items-center">
-      <h3 class="section-title">Latest RLabs Projects</h3>
-      <a href="{% url 'rlabs:list' %}" class="small">View all &rarr;</a>
-    </div>
-    <div class="row g-4">
-      {% for p in rlabs_projects %}
-      <div class="col-md-6 col-lg-3">
-        <div class="rcss-card p-3 h-100">
-          <i class="bi bi-cpu fs-4 text-primary mb-2 d-block"></i>
-          <p class="fw-semibold mb-1">{{ p.title }}</p>
-          <p class="text-muted small mb-2">Skills: {{ p.required_skills|truncatechars:40 }}</p>
-          <a href="{% url 'rlabs:detail' p.pk %}" class="btn btn-sm btn-outline-primary rounded-pill-btn">View Details</a>
-        </div>
-      </div>
-      {% empty %}
-      <div class="empty-state col-12"><i class="bi bi-cpu"></i>No RLabs projects published yet.</div>
-      {% endfor %}
-    </div>
-  </div>
-
-  <!-- Research -->
-  <div class="home-content-section research-section mt-5">
-    <div class="d-flex justify-content-between align-items-center">
-      <h3 class="section-title">Research Opportunities</h3>
-      <a href="{% url 'research:list' %}" class="small">View all &rarr;</a>
-    </div>
-    <div class="row g-4">
-      {% for r in research_opportunities %}
-      <div class="col-md-6 col-lg-3">
-        <div class="rcss-card p-3 h-100">
-          <i class="bi bi-journal-richtext fs-4 text-primary mb-2 d-block"></i>
-          <p class="fw-semibold mb-1">{{ r.topic }}</p>
-          <p class="text-muted small mb-2">{{ r.research_area }} &middot; {{ r.faculty.user.get_full_name }}</p>
-          <a href="{% url 'research:detail' r.pk %}" class="btn btn-sm btn-outline-primary rounded-pill-btn">View Details</a>
-        </div>
-      </div>
-      {% empty %}
-      <div class="empty-state col-12"><i class="bi bi-journal-richtext"></i>No research opportunities open right now.</div>
-      {% endfor %}
-    </div>
-  </div>
-
-  <!-- Events -->
-  <div class="home-content-section dark-content-section mt-5">
-    <div class="d-flex justify-content-between align-items-center">
-      <h3 class="section-title">Upcoming Events</h3>
-      <a href="{% url 'events:list' %}" class="small">View all &rarr;</a>
-    </div>
-    <div class="row g-4">
-      {% for e in events %}
-      <div class="col-md-6 col-lg-3">
-        <div class="rcss-card p-3 h-100">
-          <i class="bi bi-calendar-event fs-4 text-primary mb-2 d-block"></i>
-          <p class="fw-semibold mb-1">{{ e.title }}</p>
-          <p class="text-muted small mb-2">{{ e.date|date:"d M Y, g:i A" }} &middot; {{ e.venue }}</p>
-          <a href="{% url 'events:detail' e.pk %}" class="btn btn-sm btn-outline-primary rounded-pill-btn">View Details</a>
-        </div>
-      </div>
-      {% empty %}
-      <div class="empty-state col-12"><i class="bi bi-calendar-event"></i>No upcoming events scheduled.</div>
-      {% endfor %}
-    </div>
-  </div>
-
   <!-- Alumni + Achievements -->
   <div class="home-content-section alumni-section row mt-5 g-4">
     <div class="col-lg-6">
       <h3 class="section-title">Alumni Highlights</h3>
       {% for a in alumni_highlights %}
-      <div class="rcss-card p-3 mb-3 d-flex align-items-center gap-3">
-        <i class="bi bi-person-badge fs-2 text-primary"></i>
-        <div>
-          <strong>{{ a.user.get_full_name }}</strong> &middot; {{ a.graduation_year }}<br>
-          <span class="text-muted small">{{ a.designation }} at {{ a.current_company }}</span>
+      <div class="rcss-card p-3 mb-3 d-flex align-items-center justify-content-between gap-3">
+        <div class="d-flex align-items-center gap-3">
+          {% if a.profile_photo %}
+            <img src="{{ a.profile_photo.url }}" alt="{{ a.user.get_full_name }} profile photo" class="rounded-circle" width="52" height="52" style="object-fit:cover;">
+          {% else %}
+            <i class="bi bi-person-badge fs-2 text-primary"></i>
+          {% endif %}
+          <div>
+            <strong>{{ a.user.get_full_name }}</strong> &middot; {{ a.graduation_year }}<br>
+            <span class="text-muted small">{{ a.designation }} at {{ a.current_company }}</span>
+          </div>
         </div>
+        {% if a.linkedin %}
+          <a href="{{ a.linkedin }}" target="_blank" rel="noopener" class="btn btn-sm btn-outline-primary rounded-pill-btn" aria-label="LinkedIn profile for {{ a.user.get_full_name }}">LinkedIn</a>
+        {% endif %}
+        {% if a.show_email and a.user.email %}
+          <a href="mailto:{{ a.user.email }}" class="btn btn-sm btn-outline-secondary rounded-pill-btn" aria-label="Email {{ a.user.get_full_name }}"><i class="bi bi-envelope"></i></a>
+        {% endif %}
       </div>
       {% empty %}
-      <div class="empty-state"><i class="bi bi-person-badge"></i>Alumni profiles will appear here.</div>
+      <div class="empty-state"><i class="bi bi-person-badge"></i>No alumni profiles found.</div>
       {% endfor %}
     </div>
     <div class="col-lg-6">

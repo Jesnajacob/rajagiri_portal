@@ -14,19 +14,19 @@
     <div class="col-6 col-md-3"><div class="stat-card text-center"><h4 class="counter" data-count="{{ total_users }}">0</h4><small>Total Users</small></div></div>
     <div class="col-6 col-md-3"><div class="stat-card text-center"><h4 class="counter" data-count="{{ active_drives }}">0</h4><small>Active Drives</small></div></div>
     <div class="col-6 col-md-3"><div class="stat-card text-center"><h4 class="counter" data-count="{{ total_internships }}">0</h4><small>Internships</small></div></div>
-    <div class="col-6 col-md-3"><div class="stat-card text-center"><h4 class="counter" data-count="{{ total_rlabs }}">0</h4><small>RLabs Projects</small></div></div>
-    <div class="col-6 col-md-3"><div class="stat-card text-center"><h4 class="counter" data-count="{{ total_research }}">0</h4><small>Research Opportunities</small></div></div>
   </div>
 
   <div class="row g-3 mb-4">
     <div class="col-md-3"><a href="/admin/accounts/user/" class="btn btn-outline-primary w-100 rounded-pill-btn">Manage Users</a></div>
     <div class="col-md-3"><a href="/admin/placement/company/" class="btn btn-outline-primary w-100 rounded-pill-btn">Manage Companies</a></div>
     <div class="col-md-3"><a href="/admin/placement/placementdrive/" class="btn btn-outline-primary w-100 rounded-pill-btn">Manage Drives</a></div>
-    <div class="col-md-3"><a href="/admin/events/event/" class="btn btn-outline-primary w-100 rounded-pill-btn">Manage Events</a></div>
+    <div class="col-md-3"><a href="{% url 'core:career_hub' %}" class="btn btn-outline-primary w-100 rounded-pill-btn">Career Resources</a></div>
     <div class="col-md-3"><a href="/admin/core/announcement/" class="btn btn-outline-primary w-100 rounded-pill-btn">Announcements</a></div>
-    <div class="col-md-3"><a href="/admin/rlabs/rlabsproject/" class="btn btn-outline-primary w-100 rounded-pill-btn">RLabs Projects</a></div>
-    <div class="col-md-3"><a href="/admin/research/researchopportunity/" class="btn btn-outline-primary w-100 rounded-pill-btn">Research Opportunities</a></div>
+    <div class="col-md-3"><a href="{% url 'notifications:email_logs' %}" class="btn btn-outline-primary w-100 rounded-pill-btn">Email Logs</a></div>
+    <div class="col-md-3"><a href="{% url 'notifications:send_test_email' %}" class="btn btn-outline-primary w-100 rounded-pill-btn">Send Test Email</a></div>
     <div class="col-md-3"><a href="{% url 'placement:statistics' %}" class="btn btn-outline-primary w-100 rounded-pill-btn">Placement Statistics</a></div>
+    <div class="col-md-3"><a href="{% url 'placement:feedback_review' %}" class="btn btn-primary w-100 rounded-pill-btn">Review Feedback ({{ pending_feedback }})</a></div>
+    <div class="col-md-3"><a href="{% url 'placement:student_list' %}" class="btn btn-outline-primary w-100 rounded-pill-btn">Search Students</a></div>
   </div>
 
   <div class="rcss-card p-3">

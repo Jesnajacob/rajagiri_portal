@@ -20,15 +20,27 @@
     <p><strong>Required Skills:</strong> {{ drive.required_skills|default:"Not specified" }}</p>
     <h5 class="mt-4">Job Description</h5>
     <p>{{ drive.job_description|linebreaks }}</p>
+    {% if drive.application_questions.exists %}
+      <h5 class="mt-4">Application Questions</h5>
+      <ul>
+        {% for question in drive.application_questions.all %}<li>{{ question.question }}</li>{% endfor %}
+      </ul>
+    {% endif %}
+
+    {% if user.is_authenticated and user.role in "placement_officer admin" %}
+      <div class="border-top pt-3 mt-4">
+        <p class="mb-2"><strong>Applied Students:</strong> {{ applicant_count }}</p>
+        <a href="{% url 'placement:drive_applicants' drive.pk %}" class="btn btn-outline-primary rounded-pill-btn">View Applied Students</a>
+        <a href="{% url 'placement:export_applicants_csv' drive.pk %}" class="btn btn-outline-primary rounded-pill-btn">Download CSV</a>
+        <a href="{% url 'placement:export_applicants_excel' drive.pk %}" class="btn btn-primary rounded-pill-btn">Download Excel</a>
+      </div>
+    {% endif %}
 
     {% if user.is_authenticated and user.role == "student" %}
       {% if already_applied %}
         <button class="btn btn-success rounded-pill-btn" disabled><i class="bi bi-check-circle"></i> Already Applied</button>
       {% elif drive.is_open %}
-        <form method="post" action="{% url 'placement:apply' drive.pk %}">
-          {% csrf_token %}
-          <button type="submit" class="btn btn-primary rounded-pill-btn px-4" data-confirm="Apply for {{ drive.job_role }} at {{ drive.company.name }}?">Apply Now</button>
-        </form>
+        <a href="{% url 'placement:apply' drive.pk %}" class="btn btn-primary rounded-pill-btn px-4">Apply Now</a>
       {% else %}
         <span class="badge bg-secondary">Applications Closed</span>
       {% endif %}

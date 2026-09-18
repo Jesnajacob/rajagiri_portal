@@ -6,6 +6,10 @@ RCSS Connect - Integrated Career, Research & Student Collaboration Portal
 import os
 from pathlib import Path
 
+from dotenv import load_dotenv
+
+load_dotenv(Path(__file__).resolve().parent.parent / ".env")
+
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 # --------------------------------------------------------------------------
@@ -128,6 +132,20 @@ AUTH_PASSWORD_VALIDATORS = [
 LOGIN_URL = "accounts:login"
 LOGIN_REDIRECT_URL = "dashboard:redirect"
 LOGOUT_REDIRECT_URL = "core:home"
+
+# --------------------------------------------------------------------------
+# EMAIL CONFIGURATION (SMTP)
+# --------------------------------------------------------------------------
+EMAIL_BACKEND = os.environ.get("EMAIL_BACKEND", "django.core.mail.backends.smtp.EmailBackend")
+EMAIL_HOST = os.environ.get("EMAIL_HOST", "smtp.gmail.com")
+EMAIL_PORT = int(os.environ.get("EMAIL_PORT", "587"))
+EMAIL_USE_TLS = os.environ.get("EMAIL_USE_TLS", "True").lower() in {"1", "true", "yes", "on"}
+EMAIL_USE_SSL = os.environ.get("EMAIL_USE_SSL", "False").lower() in {"1", "true", "yes", "on"}
+EMAIL_HOST_USER = os.environ.get("EMAIL_HOST_USER", "")
+EMAIL_HOST_PASSWORD = os.environ.get("EMAIL_HOST_PASSWORD", "")
+DEFAULT_FROM_EMAIL = os.environ.get("DEFAULT_FROM_EMAIL", "RCSS Connect <noreply@rcssconnect.edu>")
+SERVER_EMAIL = DEFAULT_FROM_EMAIL
+SITE_URL = os.environ.get("SITE_URL", "http://127.0.0.1:8000")
 
 # --------------------------------------------------------------------------
 # INTERNATIONALIZATION

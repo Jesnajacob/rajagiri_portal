@@ -2,10 +2,14 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.utils import timezone
+from django.urls import reverse
 
 from accounts.decorators import role_required
 from .models import Event, EventRegistration
 from .forms import EventForm
+from notifications.services import send_event_email
+from notifications.models import notify_bulk, notify_once
+from students.models import StudentProfile
 
 
 def event_list(request):
@@ -28,6 +32,13 @@ def event_detail(request, pk):
 
 
 @login_required
+@role_required("faculty", "rlabs_coordinator", "admin")
+def event_manage_list(request):
+    events = Event.objects.all().select_related("created_by")
+    return render(request, "events/manage_list.html", {"events": events})
+
+
+@login_required
 def register_event(request, pk):
     event = get_object_or_404(Event, pk=pk)
     if not event.is_open():
@@ -35,6 +46,13 @@ def register_event(request, pk):
         return redirect("events:detail", pk=pk)
     _, created = EventRegistration.objects.get_or_create(event=event, user=request.user)
     if created:
+        notify_once(
+            event.created_by,
+            f"New Event Registration: {event.title}",
+            f"{request.user.get_full_name() or request.user.username} registered for your event '{event.title}'.",
+            category="events",
+            url=reverse("events:detail", args=[event.pk]),
+        )
         messages.success(request, f"Registered for {event.title}!")
     else:
         messages.info(request, "You are already registered for this event.")
@@ -42,7 +60,7 @@ def register_event(request, pk):
 
 
 @login_required
-@role_required("faculty", "placement_officer", "rlabs_coordinator", "admin")
+@role_required("faculty", "rlabs_coordinator", "admin")
 def event_create(request):
     if request.method == "POST":
         form = EventForm(request.POST, request.FILES)
@@ -50,7 +68,16 @@ def event_create(request):
             event = form.save(commit=False)
             event.created_by = request.user
             event.save()
-            messages.success(request, "Event created.")
+            users = [student.user for student in StudentProfile.objects.select_related("user").all()]
+            notify_bulk(users, f"New Event: {event.title}", f"{event.title} is scheduled on {event.date.strftime('%d %B %Y')}.", category="events", url=reverse("events:detail", args=[event.pk]))
+            email_failures = 0
+            for user in users:
+                if user.email and not send_event_email(user, event):
+                    email_failures += 1
+            if email_failures:
+                messages.warning(request, "Event created successfully, but some email notifications could not be sent.")
+            else:
+                messages.success(request, "Event created and notifications sent.")
             return redirect("events:list")
     else:
         form = EventForm()
@@ -58,7 +85,7 @@ def event_create(request):
 
 
 @login_required
-@role_required("faculty", "placement_officer", "rlabs_coordinator", "admin")
+@role_required("faculty", "rlabs_coordinator", "admin")
 def event_edit(request, pk):
     event = get_object_or_404(Event, pk=pk)
     if request.method == "POST":
@@ -73,7 +100,7 @@ def event_edit(request, pk):
 
 
 @login_required
-@role_required("faculty", "placement_officer", "rlabs_coordinator", "admin")
+@role_required("faculty", "rlabs_coordinator", "admin")
 def event_delete(request, pk):
     event = get_object_or_404(Event, pk=pk)
     if request.method == "POST":

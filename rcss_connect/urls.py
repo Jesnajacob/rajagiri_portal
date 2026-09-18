@@ -12,9 +12,6 @@ urlpatterns = [
     path("placement/", include("placement.urls")),
     path("internships/", include("internship.urls")),
     path("alumni/", include("alumni.urls")),
-    path("rlabs/", include("rlabs.urls")),
-    path("research/", include("research.urls")),
-    path("events/", include("events.urls")),
     path("notifications/", include("notifications.urls")),
     path("dashboard/", include("dashboard.urls")),
 ]

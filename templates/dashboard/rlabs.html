@@ -11,7 +11,10 @@
     <div class="col-6 col-md-3"><div class="stat-card text-center"><h4 class="counter" data-count="{{ open_projects }}">0</h4><small>Open Projects</small></div></div>
     <div class="col-6 col-md-3"><div class="stat-card text-center"><h4 class="counter" data-count="{{ total_applications }}">0</h4><small>Applications</small></div></div>
   </div>
-  <div class="mb-4"><a href="{% url 'rlabs:manage_list' %}" class="btn btn-outline-primary rounded-pill-btn">Manage All Projects</a></div>
+  <div class="mb-4 d-flex gap-2 flex-wrap">
+    <a href="{% url 'rlabs:manage_list' %}" class="btn btn-outline-primary rounded-pill-btn">Manage All Projects</a>
+    <a href="{% url 'events:manage_list' %}" class="btn btn-outline-primary rounded-pill-btn">Manage Events</a>
+  </div>
   <div class="rcss-card p-3">
     <h5>Recent Projects</h5>
     <table class="table align-middle mb-0">

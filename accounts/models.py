@@ -5,9 +5,7 @@ from django.db import models
 class User(AbstractUser):
     ROLE_CHOICES = [
         ("student", "Student"),
-        ("faculty", "Faculty"),
         ("placement_officer", "Placement Officer"),
-        ("rlabs_coordinator", "RLabs Coordinator"),
         ("alumni", "Alumni"),
         ("admin", "Administrator"),
     ]
@@ -19,14 +17,8 @@ class User(AbstractUser):
     def is_student(self):
         return self.role == "student"
 
-    def is_faculty(self):
-        return self.role == "faculty"
-
     def is_placement_officer(self):
         return self.role == "placement_officer"
-
-    def is_rlabs_coordinator(self):
-        return self.role == "rlabs_coordinator"
 
     def is_alumni(self):
         return self.role == "alumni"

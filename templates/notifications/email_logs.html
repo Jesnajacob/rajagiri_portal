@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+{% block title %}Email Notification Logs - RCSS Connect{% endblock %}
+{% block content %}
+<div class="container py-4">
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <h3>Email Notification Logs</h3>
+    <a href="{% url 'notifications:send_test_email' %}" class="btn btn-primary rounded-pill-btn">Send Test Email</a>
+  </div>
+
+  <div class="rcss-card p-3">
+    <div class="table-responsive">
+      <table class="table table-hover align-middle">
+        <thead>
+          <tr>
+            <th>Student</th>
+            <th>Type</th>
+            <th>Subject</th>
+            <th>Status</th>
+            <th>Date</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for log in logs %}
+          <tr>
+            <td>{{ log.recipient.get_full_name|default:log.recipient.username }}</td>
+            <td>{{ log.get_notification_type_display }}</td>
+            <td>{{ log.subject }}</td>
+            <td>
+              {% if log.status == 'sent' %}<span class="badge bg-success">Sent</span>
+              {% elif log.status == 'failed' %}<span class="badge bg-danger">Failed</span>
+              {% else %}<span class="badge bg-warning text-dark">Pending</span>
+              {% endif %}
+            </td>
+            <td>{{ log.sent_at|default:log.created_at|date:"d-m-Y" }}</td>
+          </tr>
+          {% empty %}
+          <tr><td colspan="5" class="text-center text-muted py-4">No email logs yet.</td></tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+{% endblock %}

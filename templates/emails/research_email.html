@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>New Research Opportunity</title>
+</head>
+<body style="margin:0; padding:0; background:#eef4ff; font-family:Arial, sans-serif; color:#1f2937;">
+  <div style="max-width:640px; margin:24px auto; background:#ffffff; border-radius:12px; overflow:hidden; border:1px solid #dfe7fb;">
+    <div style="background:#0b3d91; padding:20px 24px; color:#fff;">
+      <h2 style="margin:0; font-size:26px;">RCSS Connect</h2>
+      <p style="margin:8px 0 0; font-size:14px; opacity:0.9;">Rajagiri College of Social Sciences</p>
+    </div>
+    <div style="padding:28px 24px;">
+      <p>Hello {{ student_name }},</p>
+      <p>A new research opportunity has been published on RCSS Connect.</p>
+      <div style="background:#f8fafc; border-left:4px solid #0b3d91; padding:18px; border-radius:10px; margin-bottom:18px;">
+        <p><strong>Research Topic:</strong> {{ topic }}</p>
+        <p><strong>Research Area:</strong> {{ area }}</p>
+        <p><strong>Required Skills:</strong> {{ required_skills }}</p>
+        <p><strong>Faculty Mentor:</strong> {{ mentor }}</p>
+        <p><strong>Duration:</strong> {{ duration }}</p>
+        <p><strong>Students Required:</strong> {{ students_required }}</p>
+        <p><strong>Application Deadline:</strong> {{ deadline }}</p>
+      </div>
+      <div style="text-align:center; margin:20px 0;">
+        <a href="{{ site_url }}{{ view_link }}" style="display:inline-block; background:#0b3d91; color:#ffffff; text-decoration:none; padding:12px 24px; border-radius:999px; font-weight:bold;">View Opportunity</a>
+      </div>
+      <p>Regards,<br><strong>RCSS Connect</strong><br>Rajagiri College of Social Sciences</p>
+    </div>
+  </div>
+</body>
+</html>

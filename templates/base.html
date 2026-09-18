@@ -27,11 +27,9 @@
       <ul class="navbar-nav me-auto mb-2 mb-lg-0 ms-lg-3">
         <li class="nav-item"><a class="nav-link" href="{% url 'core:home' %}">Home</a></li>
         <li class="nav-item"><a class="nav-link" href="{% url 'placement:list' %}">Placements</a></li>
+        <li class="nav-item"><a class="nav-link" href="{% url 'placement:feedback_list' %}">Placement Experiences</a></li>
         <li class="nav-item"><a class="nav-link" href="{% url 'internship:list' %}">Internships</a></li>
         <li class="nav-item"><a class="nav-link" href="{% url 'alumni:directory' %}">Alumni</a></li>
-        <li class="nav-item"><a class="nav-link" href="{% url 'rlabs:list' %}">RLabs</a></li>
-        <li class="nav-item"><a class="nav-link" href="{% url 'research:list' %}">Research</a></li>
-        <li class="nav-item"><a class="nav-link" href="{% url 'events:list' %}">Events</a></li>
         {% if user.is_authenticated %}
         <li class="nav-item"><a class="nav-link" href="{% url 'dashboard:redirect' %}">Dashboard</a></li>
         {% endif %}
@@ -81,13 +79,21 @@
 
       <div class="dropdown">
         <a class="nav-link dropdown-toggle text-white d-flex align-items-center gap-1" href="#" role="button" data-bs-toggle="dropdown">
-          <i class="bi bi-person-circle fs-5"></i>
+          {% if user.role == "student" and user.student_profile.profile_photo %}
+            <img src="{{ user.student_profile.profile_photo.url }}" alt="{{ user.get_full_name }} profile photo" class="navbar-profile-photo" width="18" height="18" style="width:18px;height:18px;max-width:18px;max-height:18px;border-radius:50%;object-fit:cover;">
+          {% elif user.role == "faculty" and user.faculty_profile.profile_photo %}
+            <img src="{{ user.faculty_profile.profile_photo.url }}" alt="{{ user.get_full_name }} profile photo" class="navbar-profile-photo" width="18" height="18" style="width:18px;height:18px;max-width:18px;max-height:18px;border-radius:50%;object-fit:cover;">
+          {% elif user.role == "alumni" and user.alumni_profile.profile_photo %}
+            <img src="{{ user.alumni_profile.profile_photo.url }}" alt="{{ user.get_full_name }} profile photo" class="navbar-profile-photo" width="18" height="18" style="width:18px;height:18px;max-width:18px;max-height:18px;border-radius:50%;object-fit:cover;">
+          {% else %}
+            <i class="bi bi-person-circle fs-5"></i>
+          {% endif %}
           <span class="d-none d-lg-inline">{{ user.first_name|default:user.username }}</span>
         </a>
         <ul class="dropdown-menu dropdown-menu-end">
           <li><span class="dropdown-item-text small text-muted">{{ user.get_role_display }}</span></li>
           <li><hr class="dropdown-divider"></li>
-          <li><a class="dropdown-item" href="{% url 'dashboard:redirect' %}"><i class="bi bi-speedometer2 me-2"></i>Dashboard</a></li>
+          <li><a class="dropdown-item" href="{% url 'dashboard:redirect' %}"><i class="bi bi-columns-gap me-2"></i>Dashboard</a></li>
           <li>
             <form action="{% url 'accounts:logout' %}" method="post" class="m-0">
               {% csrf_token %}
@@ -124,8 +130,6 @@
         <ul class="list-unstyled small">
           <li><a href="{% url 'placement:list' %}">Placements</a></li>
           <li><a href="{% url 'internship:list' %}">Internships</a></li>
-          <li><a href="{% url 'rlabs:list' %}">RLabs</a></li>
-          <li><a href="{% url 'research:list' %}">Research</a></li>
         </ul>
       </div>
       <div class="col-md-2">
@@ -133,7 +137,6 @@
         <ul class="list-unstyled small">
           <li><a href="{% url 'alumni:directory' %}">Alumni Directory</a></li>
           <li><a href="{% url 'faculty:directory' %}">Faculty Directory</a></li>
-          <li><a href="{% url 'events:list' %}">Events</a></li>
           <li><a href="{% url 'core:notice_board' %}">Notice Board</a></li>
         </ul>
       </div>
@@ -141,7 +144,6 @@
         <h6 class="text-white">Resources</h6>
         <ul class="list-unstyled small">
           <li><a href="{% url 'core:career_hub' %}">Career Hub</a></li>
-          <li><a href="{% url 'research:paper_list' %}">Research Papers</a></li>
         </ul>
       </div>
       <div class="col-md-2">

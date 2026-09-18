@@ -5,7 +5,7 @@ from .models import StudentProfile, Resume, StudentProject, Certification
 class StudentProfileForm(forms.ModelForm):
     class Meta:
         model = StudentProfile
-        fields = ["department", "semester", "profile_photo", "cgpa", "skills",
+        fields = ["department", "course", "batch", "semester", "profile_photo", "cgpa", "skills",
                   "career_interests", "linkedin", "github", "bio"]
         widgets = {
             "bio": forms.Textarea(attrs={"rows": 3}),

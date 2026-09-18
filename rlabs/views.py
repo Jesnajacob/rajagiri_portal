@@ -7,7 +7,8 @@ from accounts.decorators import role_required
 from .models import RLabsProject, RLabsApplication
 from .forms import RLabsProjectForm
 from students.models import StudentProfile
-from notifications.models import notify_bulk
+from notifications.models import notify_bulk, notify_once
+from notifications.services import send_rlabs_email
 
 
 def project_list(request):
@@ -37,6 +38,15 @@ def apply_project(request, pk):
     profile = get_object_or_404(StudentProfile, user=request.user)
     _, created = RLabsApplication.objects.get_or_create(student=profile, project=project)
     if created:
+        from accounts.models import User
+        for coordinator in User.objects.filter(role="rlabs_coordinator"):
+            notify_once(
+                coordinator,
+                f"New RLabs Application: {project.title}",
+                f"{request.user.get_full_name() or request.user.username} applied for the RLabs project '{project.title}'.",
+                category="rlabs",
+                url=reverse("rlabs:project_applicants", args=[project.pk]),
+            )
         messages.success(request, f"Applied to RLabs project: {project.title}.")
     else:
         messages.info(request, "You already applied to this project.")
@@ -115,7 +125,15 @@ def project_publish(request, pk):
     notify_bulk(users, title, message, category="rlabs",
                 url=reverse("rlabs:detail", args=[project.pk]))
 
-    messages.success(request, f"Project published. {len(users)} matching student(s) notified.")
+    email_failures = 0
+    for user in users:
+        if user.email and not send_rlabs_email(user, project):
+            email_failures += 1
+
+    if email_failures:
+        messages.warning(request, "Project published successfully, but some email notifications could not be sent.")
+    else:
+        messages.success(request, f"Project published. {len(users)} matching student(s) notified.")
     return redirect("rlabs:manage_list")
 
 

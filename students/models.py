@@ -6,10 +6,13 @@ from core.validators import validate_image_extension, validate_file_size, valida
 
 class StudentProfile(models.Model):
     SEMESTER_CHOICES = [(i, f"Semester {i}") for i in range(1, 9)]
+    COURSE_CHOICES = [("msc_computer_science", "MSc Computer Science"), ("mca", "MCA")]
 
     user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="student_profile")
     register_number = models.CharField(max_length=20, unique=True)
     department = models.ForeignKey(Department, on_delete=models.SET_NULL, null=True, blank=True, related_name="students")
+    course = models.CharField(max_length=40, choices=COURSE_CHOICES, blank=True)
+    batch = models.CharField(max_length=20, blank=True)
     semester = models.PositiveSmallIntegerField(choices=SEMESTER_CHOICES, default=1)
     profile_photo = models.ImageField(
         upload_to="profile_photos/", blank=True, null=True,

@@ -5,6 +5,7 @@ app_name = "internship"
 
 urlpatterns = [
     path("", views.internship_list, name="list"),
+    path("manage/", views.manage_list, name="manage_list"),
     path("add/", views.internship_create, name="create"),
     path("<int:pk>/", views.internship_detail, name="detail"),
     path("<int:pk>/edit/", views.internship_edit, name="edit"),

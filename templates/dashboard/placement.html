@@ -17,13 +17,19 @@
     <div class="col-6 col-md-2"><div class="stat-card text-center"><h4 class="counter" data-count="{{ total_applications }}">0</h4><small>Applications</small></div></div>
     <div class="col-6 col-md-2"><div class="stat-card text-center"><h4 class="counter" data-count="{{ selected_count }}">0</h4><small>Selected</small></div></div>
     <div class="col-6 col-md-2"><div class="stat-card text-center"><h4 class="counter" data-count="{{ total_internships }}">0</h4><small>Internships</small></div></div>
+    <div class="col-6 col-md-2"><div class="stat-card text-center"><h4 class="counter" data-count="{{ total_msc_students }}">0</h4><small>MSc CS Students</small></div></div>
+    <div class="col-6 col-md-2"><div class="stat-card text-center"><h4 class="counter" data-count="{{ total_mca_students }}">0</h4><small>MCA Students</small></div></div>
   </div>
 
   <div class="row g-2 mb-4">
     <div class="col-6 col-md-3"><a href="{% url 'placement:drive_manage_list' %}" class="btn btn-outline-primary w-100 rounded-pill-btn">Manage Drives</a></div>
     <div class="col-6 col-md-3"><a href="{% url 'placement:company_list' %}" class="btn btn-outline-primary w-100 rounded-pill-btn">Manage Companies</a></div>
+    <div class="col-6 col-md-3"><a href="{% url 'internship:manage_list' %}" class="btn btn-outline-primary w-100 rounded-pill-btn">Manage Internships</a></div>
     <div class="col-6 col-md-3"><a href="{% url 'internship:create' %}" class="btn btn-outline-primary w-100 rounded-pill-btn">Post Internship</a></div>
+    <div class="col-6 col-md-3"><a href="{% url 'core:career_resource_create' %}" class="btn btn-outline-primary w-100 rounded-pill-btn">Add Career Resource</a></div>
     <div class="col-6 col-md-3"><a href="{% url 'placement:statistics' %}" class="btn btn-outline-primary w-100 rounded-pill-btn">View Statistics</a></div>
+    <div class="col-6 col-md-3"><a href="{% url 'placement:feedback_review' %}" class="btn btn-primary w-100 rounded-pill-btn">Review Feedback ({{ pending_feedback }})</a></div>
+    <div class="col-6 col-md-3"><a href="{% url 'placement:student_list' %}" class="btn btn-outline-primary w-100 rounded-pill-btn">Search Students</a></div>
   </div>
 
   <div class="rcss-card p-3">

@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% block title %}Send Test Email - RCSS Connect{% endblock %}
+{% block content %}
+<div class="container py-4">
+  <div class="row justify-content-center">
+    <div class="col-lg-6">
+      <div class="rcss-card p-4">
+        <h3 class="mb-3">Send Test Email</h3>
+        <form method="post">
+          {% csrf_token %}
+          <div class="mb-3">
+            <label for="email" class="form-label">Recipient Email Address</label>
+            <input type="email" class="form-control" id="email" name="email" placeholder="name@example.com" required>
+          </div>
+          <button type="submit" class="btn btn-primary rounded-pill-btn">Send Test Email</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

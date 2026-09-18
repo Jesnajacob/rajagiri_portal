@@ -1,0 +1,58 @@
+{% extends "base.html" %}
+{% block title %}Notification Preferences - RCSS Connect{% endblock %}
+{% block content %}
+<div class="container py-4">
+  <div class="row justify-content-center">
+    <div class="col-lg-8">
+      <div class="rcss-card p-4">
+        <h3 class="mb-4">Notification Preferences</h3>
+        <form method="post">
+          {% csrf_token %}
+          <div class="form-check form-switch mb-3">
+            <input class="form-check-input" type="checkbox" id="enable_email_notifications" name="enable_email_notifications" {% if pref.enable_email_notifications %}checked{% endif %}>
+            <label class="form-check-label" for="enable_email_notifications">Enable Email Notifications</label>
+          </div>
+
+          <div class="row g-3 mt-2">
+            <div class="col-md-6">
+              <div class="form-check form-switch">
+                <input class="form-check-input" type="checkbox" id="placement_emails" name="placement_emails" {% if pref.placement_emails %}checked{% endif %}>
+                <label class="form-check-label" for="placement_emails">Placement Emails</label>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="form-check form-switch">
+                <input class="form-check-input" type="checkbox" id="internship_emails" name="internship_emails" {% if pref.internship_emails %}checked{% endif %}>
+                <label class="form-check-label" for="internship_emails">Internship Emails</label>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="form-check form-switch">
+                <input class="form-check-input" type="checkbox" id="feedback_emails" name="feedback_emails" {% if pref.feedback_emails %}checked{% endif %}>
+                <label class="form-check-label" for="feedback_emails">Feedback &amp; Interview Experiences</label>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="form-check form-switch">
+                <input class="form-check-input" type="checkbox" id="career_resource_emails" name="career_resource_emails" {% if pref.career_resource_emails %}checked{% endif %}>
+                <label class="form-check-label" for="career_resource_emails">Career Resources</label>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="form-check form-switch">
+                <input class="form-check-input" type="checkbox" id="announcement_emails" name="announcement_emails" {% if pref.announcement_emails %}checked{% endif %}>
+                <label class="form-check-label" for="announcement_emails">Important Announcements</label>
+              </div>
+            </div>
+          </div>
+
+          <div class="d-flex justify-content-between align-items-center mt-4">
+            <a href="{% url 'dashboard:student' %}" class="btn btn-outline-secondary rounded-pill-btn">Back to Dashboard</a>
+            <button type="submit" class="btn btn-primary rounded-pill-btn">Save Preferences</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
